@@ -2,27 +2,22 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { join } from 'path';
 import { ProductsModule } from './modules/products/products.module';
+import config from '../orm.config'
 
 @Module({
   imports: [
-    // ConfigModule.forRoot({ isGlobal: true }),
-    // TypeOrmModule.forRootAsync({
-    //   inject: [ConfigModule],
-    //   useClass: TypeOrmConfigService,
+    // TypeOrmModule.forRoot({
+    //   type: 'postgres',
+    //   host: 'localhost',
+    //   port: 5432,
+    //   username: 'admin',
+    //   password: 'pass123',
+    //   database: 'monodb',
+    //   synchronize: true,
+    //   autoLoadEntities: true,
     // }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'admin',
-      password: 'pass123',
-      database: 'monodb',
-      // entities: [join(__dirname, '**', '*.entity.{ts,js}')],
-      synchronize: true,
-      autoLoadEntities: true,
-    }),
+    TypeOrmModule.forRoot(config),
     ProductsModule,
   ],
   controllers: [AppController],
