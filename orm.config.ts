@@ -11,7 +11,7 @@ const ormConfig:TypeOrmModuleOptions = {
     username: process.env.DB_USERNAME || 'admin',
     password: process.env.DB_PASSWORD || 'pass123',
     database: process.env.DB_DATABASE || 'monodb',
-    // entities: ["dist/**/*.entity{.ts,.js}"],
+    entities: ["dist/**/*.entity{.ts,.js}"],
     migrations: ["dist/migrations/*{.ts,.js}"],
     autoLoadEntities: true,
     synchronize: true, // TODO turn off for prod

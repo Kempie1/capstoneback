@@ -1,0 +1,50 @@
+[
+    {
+      "name": "NZXT HUE 2 RGB Lighting Kit",
+      "price": "",
+      "type": "LED Controller",
+      "form_factor": 2.5
+    },
+    {
+      "name": "NZXT Hue+",
+      "price": "",
+      "type": "LED Controller",
+      "form_factor": 2.5
+    },
+    {
+      "name": "NZXT Hue",
+      "price": 29.95,
+      "type": "LED Controller",
+      "form_factor": 5.25
+    },
+    {
+      "name": "NZXT Aperture M",
+      "price": "",
+      "type": "Card Reader",
+      "form_factor": 5.25
+    },
+    {
+      "name": "Vantec UGT-CR935",
+      "price": "",
+      "type": "Card Reader",
+      "form_factor": 3.5
+    },
+    {
+      "name": "nMEDIAPC ZE-C668",
+      "price": "",
+      "type": "Card Reader",
+      "form_factor": 5.25
+    },
+    {
+      "name": "nMEDIAPC ZE-C288",
+      "price": "",
+      "type": "Card Reader",
+      "form_factor": 5.25
+    },
+    {
+      "name": "Unitech U3903",
+      "price": "",
+      "type": "Card Reader",
+      "form_factor": 5.25
+    }
+  ]

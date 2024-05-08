@@ -10,10 +10,10 @@ export class ProductCharacteristic {
     @Column()
     value: string;
 
-    @ManyToMany(() => Product)
+    @ManyToMany(() => Product, {eager: true})
     @JoinTable()
     products: Product[]
 
-    @ManyToOne(type  => Characteristic)
+    @ManyToOne(()  => Characteristic, {eager: true})
     characteristic: Characteristic[]
   }
