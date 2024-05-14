@@ -107,6 +107,7 @@ export class InitialData1715005511809 implements MigrationInterface {
                 let insertedProductResult = await queryRunner.manager.insert<Product>(Product, {
                     name: (product as any).name,
                     imgUrl: tempURL,
+                    categories: [categoryEntity]
                 });
                 let productId = insertedProductResult.identifiers[0].id
                 let insertedProduct = await queryRunner.manager.findOne<Product>(Product,{ where:{
