@@ -2,7 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, ManyToOne, JoinTabl
 import { Product } from './Product.entity';
 import { Characteristic } from './Characteristic.entity';
 
-@Entity('Product_characteristic')
+@Entity('product_characteristic')
 export class ProductCharacteristic {
     @PrimaryGeneratedColumn("uuid")
     id: string;
@@ -10,7 +10,7 @@ export class ProductCharacteristic {
     @Column()
     value: string;
 
-    @ManyToMany(() => Product, {eager: true})
+    @ManyToMany(() => Product)
     @JoinTable()
     products: Product[]
 

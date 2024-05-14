@@ -1,10 +1,11 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner, SimpleConsoleLogger } from "typeorm";
 import { Product } from "../src/modules/products/entities/Product.entity";
 import * as fs from "fs";
 import * as path from "path";
 import { parse } from 'fast-csv';
 import { Characteristic } from "../src/modules/products/entities/Characteristic.entity";
 import { ProductCharacteristic } from "../src/modules/products/entities/ProductCharacteristic.entity";
+import { Category } from "../src/modules/products/entities/Category.entity";
 import motherboardsJson from '../sourceData/json/motherboard.json'
 import { query } from "express";
 
@@ -58,12 +59,20 @@ export class InitialData1715005511809 implements MigrationInterface {
         
         var csvFolderPath = path.resolve(__dirname, '../../sourceData/csv')
         const targetFolder = csvFolderPath;
-        console.log("🌯")
+        // console.log("🌯")
         let csvFiles = await readCSVDirectory(targetFolder);
         for (let fileName of csvFiles) {
             const filePath = path.join(csvFolderPath, fileName);
             const csvData = await readCSVFile(filePath);
             console.log(`--- File: ${fileName} ---`); //Category name
+           
+            //Create Category of products
+            let categoryEntity = await queryRunner.manager.create(Category, {
+                name:  path.parse(fileName).name,
+            })
+            await queryRunner.manager.save(categoryEntity)
+
+
             let keys=[]
             let characteristicsIds=[]
             // let characteristicsEntities=[]
@@ -107,11 +116,13 @@ export class InitialData1715005511809 implements MigrationInterface {
                 //Create ProductCharacterstic rows
                 for (let i = 0; i < keys.length; i++) {
                     //Check if simmilar already exists
-                    let foundProductCharacteristic = await queryRunner.manager.findOne<ProductCharacteristic>(ProductCharacteristic,{ where:{
+                    let foundProductCharacteristic = await queryRunner.manager.findOne<ProductCharacteristic>(ProductCharacteristic,{ 
+                        relations: ['products'],
+                        where:{
                         value: (product[keys[i]] as any),
                         characteristic:  {id : characteristicsIds[i]},
                     }});
-                    console.log("Found 🦊",foundProductCharacteristic)
+                    // console.log("Found 🦊",foundProductCharacteristic)
                     if (foundProductCharacteristic === null){
                     // console.log("productId 🦊",productId)
                     let insertedProductCharacteristicResult = await queryRunner.manager.insert<ProductCharacteristic>(ProductCharacteristic, {
@@ -124,7 +135,7 @@ export class InitialData1715005511809 implements MigrationInterface {
                         foundProductCharacteristic.products.push(insertedProduct)
                         await queryRunner.manager.save(foundProductCharacteristic)
                     }
-                  }
+                  } 
             }
         }
     }   
