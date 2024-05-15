@@ -32,13 +32,9 @@ export class ProductsService {
         const pageSize: number = 50;
         const pageNumber: number = +query.page || 1;
         const skip = (pageNumber - 1) * pageSize;
-        console.log("I am trying 1")
-        console.log("Getting🦊",query.sortBy)
-        switch (query.sortBy){
-            case sortByEnum.LowHigh:
-                console.log("I am trying 2")
-            case sortByEnum.HighLow:
-                console.log("I am trying 3")
+        switch (+query.sortBy){
+            case 0:
+            case 1:
                 const order = ((query.sortBy == 0) ? 'ASC' : 'DESC');
                 const data = await this.productsRepository
                 .createQueryBuilder("products")
@@ -51,9 +47,7 @@ export class ProductsService {
                 .take(pageSize)
                 .getMany();
 
-                return data
-                default:
-                    console.log("I am trying 111")   
+                return data  
         }
 
         // return paginateResponse(data, pageNumber, pageSize);
