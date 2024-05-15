@@ -1,4 +1,4 @@
 export enum sortByEnum {
-    LowHigh =  0,
-    HighLow = 1,
-  }
+  LowHigh = 0,
+  HighLow = 1,
+}

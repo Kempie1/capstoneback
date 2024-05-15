@@ -1,19 +1,26 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, ManyToOne, JoinTable, JoinColumn} from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToMany,
+  ManyToOne,
+  JoinTable,
+} from 'typeorm';
 import { Product } from './Product.entity';
 import { Characteristic } from './Characteristic.entity';
 
 @Entity('product_characteristic')
 export class ProductCharacteristic {
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
-    
-    @Column()
-    value: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @ManyToMany(() => Product, (product) => product.productCharacteristics)
-    @JoinTable()
-    products: Product[]
+  @Column()
+  value: string;
 
-    @ManyToOne(()  => Characteristic, {eager: true})
-    characteristic: Characteristic[]
-  }
+  @ManyToMany(() => Product, (product) => product.productCharacteristics)
+  @JoinTable()
+  products: Product[];
+
+  @ManyToOne(() => Characteristic, { eager: true })
+  characteristic: Characteristic[];
+}

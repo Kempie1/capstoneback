@@ -1,20 +1,16 @@
-import { Controller, Get, Param, ParseUUIDPipe, Query  } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { Product } from './entities/Product.entity';
-import { sortByEnum } from '../utils/enums'
 import { GetByCategoryDTO } from './dtos/getCategory.dto';
 import {
-  ApiBearerAuth,
-  ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 
-
 @ApiTags('Products')
 @Controller('products')
 export class ProductsController {
-    constructor(private readonly productsService: ProductsService) {}
+  constructor(private readonly productsService: ProductsService) {}
 
   @Get()
   getHello(): string {
@@ -30,11 +26,8 @@ export class ProductsController {
     status: 200,
     description: 'The found record',
   })
-  async getProductByCategory(
-    @Query() query: GetByCategoryDTO,
-  ) {
-   
-    return this.productsService.get(query)
+  async getProductByCategory(@Query() query: GetByCategoryDTO) {
+    return this.productsService.get(query);
     // return this.productsService.getProduct(id);
   }
 }

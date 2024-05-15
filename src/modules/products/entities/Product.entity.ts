@@ -1,10 +1,16 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
 import { Category } from './Category.entity';
-import { ProductCharacteristic } from './ProductCharacteristic.entity'
+import { ProductCharacteristic } from './ProductCharacteristic.entity';
 
 @Entity('product')
 export class Product {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
@@ -13,10 +19,13 @@ export class Product {
   @Column()
   imgUrl: string;
 
-  @ManyToMany(() => Category, {eager: true})
+  @ManyToMany(() => Category, { eager: true })
   @JoinTable()
-  categories: Category[]
+  categories: Category[];
 
-  @ManyToMany(() => ProductCharacteristic, (productCharacteristic) => productCharacteristic.products)
-  productCharacteristics: ProductCharacteristic[]
+  @ManyToMany(
+    () => ProductCharacteristic,
+    (productCharacteristic) => productCharacteristic.products,
+  )
+  productCharacteristics: ProductCharacteristic[];
 }
