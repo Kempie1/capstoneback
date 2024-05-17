@@ -14,7 +14,7 @@ export class InitialData1715005511809 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         // await queryRunner.startTransaction();
-        const tempURL = "https://cdn.discordapp.com/attachments/600970036386988046/1237050444283641886/RDT_20240117_1412282784247811892924977.jpg?ex=663a3c81&is=6638eb01&hm=ade8318a8e7ec6f61ad2f29bf5826a2398336d748197563f8b10f5fa9408289d&"
+        const tempURL = "https://picsum.photos/1000"
         
         // Function to check if a file is a CSV file
         const isCSVFile = (fileName: string): boolean => {
@@ -70,9 +70,8 @@ export class InitialData1715005511809 implements MigrationInterface {
             let categoryEntity = await queryRunner.manager.create(Category, {
                 name:  path.parse(fileName).name,
             })
-            await queryRunner.manager.save(categoryEntity)
-
-
+            let savedCategory = await queryRunner.manager.save(categoryEntity)
+            console.log(savedCategory)
             let keys=[]
             let characteristicsIds=[]
             // let characteristicsEntities=[]
@@ -103,13 +102,16 @@ export class InitialData1715005511809 implements MigrationInterface {
             }
             //Create Product rows
             for ( let product of csvData){
-
-                let insertedProductResult = await queryRunner.manager.insert<Product>(Product, {
+                console.log("🦊",savedCategory)
+                let insertedProductResult= await queryRunner.manager.create(Product, {
                     name: (product as any).name,
                     imgUrl: tempURL,
-                    categories: [categoryEntity]
-                });
-                let productId = insertedProductResult.identifiers[0].id
+                    categories: [savedCategory]
+                })
+                // let insertedProductResult = await queryRunner.manager.insert<Product>(Product, productToInsert);
+
+                insertedProductResult = await queryRunner.manager.save(insertedProductResult)
+                let productId = insertedProductResult.id
                 let insertedProduct = await queryRunner.manager.findOne<Product>(Product,{ where:{
                     id : productId
                 }}); 

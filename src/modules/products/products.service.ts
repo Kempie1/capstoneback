@@ -25,15 +25,17 @@ export class ProductsService {
 
   //Get Products page paginated
   async get(query: GetByCategoryDTO) {
-    const pageSize: number = 50;
+    const pageSize: number = 40;
     const pageNumber: number = +query.page || 1;
     const skip = (pageNumber - 1) * pageSize;
-    switch (+query.sortBy) {
-      case 0:
-      case 1:
-        const order = query.sortBy == 0 ? 'ASC' : 'DESC';
+    const categoryName = query.category;
+    switch (query.sortBy) {
+      case 'LowHigh':
+      case 'HighLow':
+        const order = query.sortBy == 'LowHigh' ? 'ASC' : 'DESC';
         const data = await this.productsRepository
           .createQueryBuilder('products')
+          .leftJoinAndSelect('products.categories', 'category')
           .leftJoinAndSelect(
             'products.productCharacteristics',
             'productCharacteristic',
@@ -44,11 +46,11 @@ export class ProductsService {
           )
           .where("characteristic.name = 'price'")
           .andWhere("productCharacteristic.value != ''")
+          .andWhere('category.name = :categoryName', { categoryName })
           .orderBy('productCharacteristic.value', order)
           .skip(skip)
           .take(pageSize)
           .getMany();
-
         return data;
     }
 

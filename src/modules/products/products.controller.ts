@@ -17,17 +17,12 @@ export class ProductsController {
     return this.productsService.getHello();
   }
 
-  @Get('/:id')
+  @Get('/product/:id')
   getProduct(@Param('id', ParseUUIDPipe) id: string): Promise<Product | null> {
     return this.productsService.getProduct(id);
   }
-  @Get('/category/:sortBy/:pageNumber')
-  @ApiResponse({
-    status: 200,
-    description: 'The found record',
-  })
+  @Get('/category')
   async getProductByCategory(@Query() query: GetByCategoryDTO) {
     return this.productsService.get(query);
-    // return this.productsService.getProduct(id);
   }
 }
