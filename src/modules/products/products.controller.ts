@@ -6,6 +6,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { GetRelatedProductDTO } from './dtos/getRelatedProduct.dto';
 
 @ApiTags('Products')
 @Controller('products')
@@ -17,12 +18,18 @@ export class ProductsController {
     return this.productsService.getHello();
   }
 
-  @Get('/product/:id')
-  getProduct(@Param('id', ParseUUIDPipe) id: string): Promise<Product | null> {
-    return this.productsService.getProduct(id);
-  }
   @Get('/category')
   async getProductByCategory(@Query() query: GetByCategoryDTO) {
     return this.productsService.get(query);
+  }
+
+  @Get('/related')
+  getRelatedProduct(@Query() query: GetRelatedProductDTO){
+    return this.productsService.getRelatedProduct(query);
+  }
+
+  @Get('/product/:id')
+  getProduct(@Param('id', ParseUUIDPipe) id: string): Promise<Product | null> {
+    return this.productsService.getProduct(id);
   }
 }

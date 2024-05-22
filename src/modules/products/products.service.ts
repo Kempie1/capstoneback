@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { InjectRepository, } from '@nestjs/typeorm';
+import { Repository, Not } from 'typeorm';
 import { Product } from './entities/Product.entity';
 import { GetByCategoryDTO } from './dtos/getCategory.dto';
+import { GetRelatedProductDTO } from './dtos/getRelatedProduct.dto';
 
 @Injectable()
 export class ProductsService {
@@ -53,7 +54,13 @@ export class ProductsService {
           .getMany();
         return data;
     }
-
-    // return paginateResponse(data, pageNumber, pageSize);
+  }
+  async getRelatedProduct(query: GetRelatedProductDTO) {
+    return this.productsRepository.find({
+      relations: ['productCharacteristics'],
+      where: { id: Not(query.id),
+        name: query.name
+       },
+    });
   }
 }
