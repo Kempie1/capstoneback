@@ -12,8 +12,8 @@ export class ProductsService {
     private productsRepository: Repository<Product>,
   ) {}
 
-  getHello(): string {
-    return 'Hello World!';
+  getEmoji(): string {
+    return '🦊';
   }
 
   //Get Product
