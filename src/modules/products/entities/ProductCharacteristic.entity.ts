@@ -22,5 +22,5 @@ export class ProductCharacteristic {
   products: Product[];
 
   @ManyToOne(() => Characteristic, { eager: true })
-  characteristic: Characteristic[];
+  characteristic: Characteristic;
 }

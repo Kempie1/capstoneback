@@ -7,8 +7,9 @@ export class GetByCategoryDTO {
   @IsEnum(CategoriesEnum)
   category: CategoriesEnum;
 
+  @IsOptional()
   @IsEnum(sortByEnum) 
-  sortBy: sortByEnum;
+  sortBy?: sortByEnum;
 
   @ApiPropertyOptional()
   @Transform(({ value }) => value ? parseInt(value, 10) : undefined)
