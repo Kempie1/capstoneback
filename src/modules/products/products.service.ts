@@ -19,11 +19,12 @@ export class ProductsService {
   }
 
   //Get Product
-  getProduct(id: string): Promise<Product | null> {
-    return this.productsRepository.findOne({
+  async getProduct(id: string) {
+     let data = this.flattenProduct(await this.productsRepository.findOne({
       relations: ['productCharacteristics'],
       where: { id: id },
-    });
+    }));
+    return data
   }
 
 
@@ -34,26 +35,21 @@ export class ProductsService {
       imgUrl: product.imgUrl,
       categories: product.categories,
       characteristics: [],
-      price: "",
+      price: product.price,
     };
     for (const productCharacteristic of product.productCharacteristics) {
-      if (productCharacteristic.characteristic.name == "price") {
-        flatProduct.price = productCharacteristic.value;
-      } else {
-        flatProduct.characteristics.push({
-          characteristicId: productCharacteristic.characteristic.id,
-          characteristicName: productCharacteristic.characteristic.name,
-          valueId: productCharacteristic.id,
-          value: productCharacteristic.value,
-        });
-      }
+      flatProduct.characteristics.push({
+        characteristicId: productCharacteristic.characteristic.id,
+        characteristicName: productCharacteristic.characteristic.name,
+        valueId: productCharacteristic.id,
+        value: productCharacteristic.value,
+      });
     }
     return flatProduct;
   }
 
   async get(query: GetByQueryDto) {
-    console.log("🦊", query)
-    const pageSize: number = 40;
+    const pageSize: number = 20;
     const pageNumber: number = +query.page || 1;
     const skip = (pageNumber - 1) * pageSize;
     const { category, filters, keyword } = query;
@@ -83,28 +79,22 @@ export class ProductsService {
 
     // Check if keyword is defined and add condition for product name search
     if (keyword) {
-      qb = qb.andWhere('products.name LIKE :keyword', { keyword: `%${keyword}%` });
+      qb = qb.andWhere('products.name ILIKE :keyword', { keyword: `%${keyword}%` });
     }
 
-    const order = query.sortBy === 'LowHigh' ? 'ASC' : 'DESC' || 'ASC';
+    const order = query.sortBy === 'LowHigh' ? 'DESC' : 'ASC' || 'DESC';
 
 
 
     // Apply sorting and pagination
-    qb = qb.orderBy('productCharacteristic.value', order)
-      // .skip(skip)
-      // .take(pageSize);
-
+    qb = qb.orderBy('products.price', order)
+      .skip(skip)
+      .take(pageSize);
     // Execute the query
-    // const data = await qb.getMany();
     const data = await qb.getManyAndCount()
-    // const count = await qb.getCount();
-    console.log("testCount", data[0].length)
-    console.log("test", data[1])
-    
 
     //process the data
-    
+
     let flatData = []
     data[0].forEach((product) => {
       flatData.push(this.flattenProduct(product));
@@ -112,11 +102,10 @@ export class ProductsService {
 
     let result = {
       products: flatData,
-      totalPages: Math.ceil(data[1]/pageSize),
+      totalPages: Math.ceil(data[1] / pageSize),
       currentPage: pageNumber,
       pageSize: pageSize,
     }
-    console.log("🦊", result.totalPages)
 
     return result;
   }

@@ -19,6 +19,9 @@ export class Product {
   @Column()
   imgUrl: string;
 
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  price: string;
+
   @ManyToMany(() => Category, { eager: true })
   @JoinTable()
   categories: Category[];

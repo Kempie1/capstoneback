@@ -75,11 +75,9 @@ export class InitialData1715005511809 implements MigrationInterface {
             let keys=[]
             let characteristicsIds=[]
             // let characteristicsEntities=[]
-            let first = true;
             //Create Characteristic rows
             for ( let key in csvData[0]){
-                if (first) {
-                    first = false;
+                if (key === "price" || key === "name") {
                     continue;
                 }
                 keys.push(key)
@@ -106,7 +104,8 @@ export class InitialData1715005511809 implements MigrationInterface {
                 let insertedProductResult= await queryRunner.manager.create(Product, {
                     name: (product as any).name,
                     imgUrl: tempURL,
-                    categories: [savedCategory]
+                    categories: [savedCategory],
+                    price: (product as any).price || 0,
                 })
                 // let insertedProductResult = await queryRunner.manager.insert<Product>(Product, productToInsert);
 
@@ -144,7 +143,10 @@ export class InitialData1715005511809 implements MigrationInterface {
     }   
 
     public async down(queryRunner: QueryRunner): Promise<void> {    
-
+        await queryRunner.query(`DELETE FROM "product"`);
+        await queryRunner.query(`DELETE FROM "category"`);
+        await queryRunner.query(`DELETE FROM "characteristic"`);
+        await queryRunner.query(`DELETE FROM "product_characteristic"`);
     }
 
 }
