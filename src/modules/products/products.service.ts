@@ -84,8 +84,6 @@ export class ProductsService {
 
     const order = query.sortBy === 'LowHigh' ? 'DESC' : 'ASC' || 'DESC';
 
-
-
     // Apply sorting and pagination
     qb = qb.orderBy('products.price', order)
       .skip(skip)

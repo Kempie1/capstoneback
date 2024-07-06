@@ -1,20 +1,21 @@
 
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { UserDto } from './dtos/signIn.dto';
+import { UserDto } from './dtos/user.dto';
 import { InjectRepository, } from '@nestjs/typeorm';
 import { User } from '../users/entities/User.entity';
 import { Repository } from 'typeorm';
+import { ShoppingCart } from '../cart/entities/ShoppingCart.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
     private jwtService: JwtService,
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    @InjectRepository(ShoppingCart)
+        private shoppingCartRepository: Repository<ShoppingCart>,
   ) { }
 
   async validateUser(email: string, pass: string): Promise<any> {
@@ -43,12 +44,15 @@ export class AuthService {
   async login(user: any) {
     const payload = { sub: user.id };
     return {
-      access_token: this.jwtService.sign(payload),
+      token: {
+        accessToken: this.jwtService.sign(payload),
+      }
     };
   }
 
 
   async register(newUser: UserDto) {
+    //TODO: Return the errors
     try {
       await this.userRepository.findOneBy({ email: newUser.email }).then(user => {
         if (user) {
@@ -58,12 +62,14 @@ export class AuthService {
       const saltRounds = 11;
       const user = new User()
       user.email = newUser.email
+      const cart= new ShoppingCart()
+      cart.user=user
       bcrypt.hash(newUser.password, saltRounds, (err, hash) => {
         // Store hash in your password DB.
         user.password = hash
         this.userRepository.save(user)
+        this.shoppingCartRepository.save(cart)
       })
-
       return { message: "User created" }
     }
     catch (error) {

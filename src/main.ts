@@ -9,6 +9,11 @@ async function bootstrap() {
     .setTitle('MonoBackEnd API')
     .setDescription('🦊Monolithic Api Implementation🦊')
     .setVersion('0.1')
+    .addSecurity('bearer', {
+      type: 'http',
+      scheme: 'bearer',
+    })
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

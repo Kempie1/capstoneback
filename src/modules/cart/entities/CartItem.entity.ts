@@ -15,7 +15,7 @@ import {
     @Column()
     quantity: number;
   
-    @ManyToOne(() => Product)
+    @ManyToOne(() => Product, {eager: true})
     product: Product;
 
     @ManyToOne(() => ShoppingCart, (shoppingCart) => shoppingCart.cartItems)

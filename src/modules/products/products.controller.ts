@@ -1,6 +1,5 @@
 import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { Product } from './entities/Product.entity';
 import { GetByCategoryDTO } from './dtos/getCategory.dto';
 import { GetByQueryDto } from './dtos/getByQuerry.dto';
 import {

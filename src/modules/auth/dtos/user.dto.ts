@@ -1,7 +1,9 @@
-import { IsEmail, IsNotEmpty, MinLength, IsStrongPassword, IsStrongPasswordOptions } from 'class-validator';
+import { IsEmail, IsNotEmpty, MinLength, IsStrongPassword } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class UserDto {
     @IsEmail()
+    @Transform((param) => param.value.toLowerCase())
     email: string;
   
     @IsNotEmpty()

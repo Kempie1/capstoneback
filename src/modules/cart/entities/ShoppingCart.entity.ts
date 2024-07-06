@@ -15,10 +15,7 @@ import { User } from '../../users/entities/User.entity';
     @PrimaryGeneratedColumn('uuid')
     id: string;
   
-    @Column()
-    quantity: number;
-  
-    @OneToMany(() => CartItem, (cart_item) => cart_item.shoppingCart)
+    @OneToMany(() => CartItem, (cart_item) => cart_item.shoppingCart, {nullable: true})
     cartItems: CartItem[];
 
     @OneToOne(() => User)

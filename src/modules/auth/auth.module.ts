@@ -9,15 +9,16 @@ import { jwtConstants } from './constants';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from '../users/entities/User.entity';
+import { ShoppingCart } from '../cart/entities/ShoppingCart.entity';
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([ShoppingCart]),
     UsersModule,
-    PassportModule,
+    PassportModule.register({ session: true }),
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '15m' },
+      signOptions: { expiresIn: '1h' },
     }),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],
