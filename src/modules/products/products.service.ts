@@ -77,7 +77,7 @@ export class ProductsService {
       });
     }
 
-    // Check if keyword is defined and add condition for product name search
+    // Check if keyword is defined and add condition for product search by name
     if (keyword) {
       qb = qb.andWhere('products.name ILIKE :keyword', { keyword: `%${keyword}%` });
     }
@@ -88,11 +88,11 @@ export class ProductsService {
     qb = qb.orderBy('products.price', order)
       .skip(skip)
       .take(pageSize);
+
     // Execute the query
     const data = await qb.getManyAndCount()
 
-    //process the data
-
+    //flatten the data
     let flatData = []
     data[0].forEach((product) => {
       flatData.push(this.flattenProduct(product));

@@ -1,5 +1,5 @@
 
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UserDto } from './dtos/user.dto';
@@ -56,7 +56,7 @@ export class AuthService {
     try {
       await this.userRepository.findOneBy({ email: newUser.email }).then(user => {
         if (user) {
-          throw new HttpException('User with that email already exists', HttpStatus.BAD_REQUEST);
+          throw new BadRequestException('User with that email already exists');
         }
       })
       const saltRounds = 11;
@@ -73,9 +73,8 @@ export class AuthService {
       return { message: "User created" }
     }
     catch (error) {
-      // Log the error and rethrow or handle it as needed
       console.error('Registration error:', error);
-      throw new HttpException('Registration failed', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new InternalServerErrorException('Registration failed');
     }
   }
 

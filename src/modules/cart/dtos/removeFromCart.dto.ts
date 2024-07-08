@@ -1,10 +1,5 @@
 import { IsString, IsUUID} from 'class-validator';
+import { AddToCartDto } from './addToCart.dto';
 
 
-export class RemoveFromCartDto {
-
-    @IsUUID()
-    @IsString()
-    product: string;
-
-}
+export class RemoveFromCartDto  extends AddToCartDto{}

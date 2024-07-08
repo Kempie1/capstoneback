@@ -5,6 +5,6 @@ export class AddToCartDto {
 
     @IsUUID()
     @IsString()
-    product: string;
+    productId: string;
 
 }
