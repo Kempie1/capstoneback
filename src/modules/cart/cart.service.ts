@@ -20,12 +20,10 @@ export class CartService {
         private productsRepository: Repository<Product>,
       ) { }
 
-    @UseGuards(JwtAuthGuard)
     getCart(req) {
         return this.shoppingCartRepository.findOne({where:{user: req.user.sub}, relations: ['cartItems']});
     }
 
-    @UseGuards(JwtAuthGuard)
     async addProductToCart(req, body: AddToCartDto) {
         //get the cart from Authenticated user
         let cart = await this.shoppingCartRepository.findOne({where:{user: req.user.sub}, relations: ['cartItems']});
@@ -53,7 +51,6 @@ export class CartService {
         return "cart updated";
     }
 
-    @UseGuards(JwtAuthGuard)
     async removeProductFromCart(req, body: RemoveFromCartDto) {
         //get the cart from Authenticated user
         let cart = await this.shoppingCartRepository.findOne({where:{user: req.user.sub}, relations: ['cartItems']});
@@ -66,7 +63,6 @@ export class CartService {
         return "cart updated";
     }
 
-    @UseGuards(JwtAuthGuard)
     async editProductInCart(req, body: EditProductInCartDto) {
         //get the cart from Authenticated user
         let cart = await this.shoppingCartRepository.findOne({where:{user: req.user.sub}, relations: ['cartItems']});

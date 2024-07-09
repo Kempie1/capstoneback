@@ -22,7 +22,7 @@ import { StripeModule } from './modules/stripe/stripe.module';
     AuthModule,
     CartModule,
     OrdersModule,
-    StripeModule
+    StripeModule.forRootAsync()
   ],
   controllers: [AppController],
   providers: [AppService],
