@@ -37,7 +37,6 @@ export class CartService {
         //if it is not, add the product to the cart
         else {
             let product = await this.productsRepository.findOne({ where: { id: body.productId }});
-            console.log(product);
             if (!product) {
                 throw new BadRequestException("error: product not found");
             }

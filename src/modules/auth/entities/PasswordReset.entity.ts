@@ -1,4 +1,4 @@
-import { Column, Entity, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Column, Entity, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
 import { User } from '../../users/entities/User.entity';
 
 @Entity('password_reset')
@@ -12,7 +12,7 @@ export class PasswordReset {
     @CreateDateColumn()
     expiration: Date
 
-    @OneToOne(() => User)
+    @ManyToOne(() => User)
     @JoinColumn()
     user: User;
 }

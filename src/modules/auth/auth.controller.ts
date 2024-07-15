@@ -50,10 +50,8 @@ export class AuthController {
 
   @Post('verify-password-reset')
   async verifytResetPassword(@Body() body: VerifyResetPasswordDto) {
-    if (this.authService.verifyResetToken(body)) {
-      return {validToken: true};
-    }
-    return {validToken: false};
+    let result = await this.authService.verifyResetToken(body)
+    return {validToken: result};
   }
 
   @Post('complete-password-reset')

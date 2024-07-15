@@ -119,7 +119,7 @@ export class AuthService {
       resetToken.expiration = new Date(Date.now() + 900000); // 15 minutes
 
       const tokenEntity = await this.passwordResetRepository.save(resetToken);
-  
+
       return { tableId: tokenEntity.id, token: token };
     } catch (error) {
       console.error("Error creating password reset token:", error);
@@ -140,7 +140,7 @@ export class AuthService {
       let passwordResetData = await this.createPasswordResetToken(user);
       let { tableId, token } = passwordResetData;
       let baseurl = this.configService.get<string>('FRONTEND_URL')
-      const resetLink = baseurl + `/reset-password?token=${token}&id=${tableId}`;
+      const resetLink = baseurl + `/forgot-password/reset-password?token=${token}&id=${tableId}`;
       await this.emailService.sendForgotPasswordEmail(email, resetLink);
     }
     return { message: 'If a user with that email exists, a password reset link has been sent.' };
@@ -156,20 +156,22 @@ export class AuthService {
         throw new BadRequestException('Invalid token');
       }
     }
-    bcrypt.compare(token, passwordResetEntity.token, (err, result) => {
-      if (err) {
-        console.error('Error comparing tokens:', err);
-      } else {
-        return result
+    if (passwordResetEntity.expiration > new Date()) {
+      try {
+        const match = await bcrypt.compare(token, passwordResetEntity.token);
+        return match
+      } catch (error) {
+        throw error; 
       }
-    });
-    return false
+    }
+    else
+      return false
   }
 
   async completeResetPassword(body: CompleteResetPasswordDto) {
     const { token, id } = body;
     const passwordResetEntity = await this.passwordResetRepository.findOne({
-      where: { id: id }
+      where: { id: id }, relations: ['user']
     });
     if (!passwordResetEntity) {
       throw new BadRequestException('Invalid token');

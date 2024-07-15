@@ -26,7 +26,7 @@ async sendForgotPasswordEmail(email:string, url:string) {
         template: './forgotPassword', // The `.pug` or `.hbs` template to use
         context: {  // Data to be sent to template engine
           email: email,
-          code: url,
+          resetLink: url,
         },
       });
 }
