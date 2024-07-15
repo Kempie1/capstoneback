@@ -10,6 +10,9 @@ import { AuthModule } from './modules/auth/auth.module';
 import { CartModule } from './modules/cart/cart.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { StripeModule } from './modules/stripe/stripe.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { EmailModule } from './modules/email/email.module';
+import mailerConfig from 'config/email.config';
 
 
 @Module({
@@ -22,9 +25,11 @@ import { StripeModule } from './modules/stripe/stripe.module';
     AuthModule,
     CartModule,
     OrdersModule,
-    StripeModule.forRootAsync()
+    StripeModule.forRootAsync(),
+    MailerModule.forRoot(mailerConfig),
+    EmailModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

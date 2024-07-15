@@ -12,9 +12,9 @@ export class UsersService {
     private userRepository: Repository<User>,
   ) { }
 
-  async findOne(sub: string): Promise<User | undefined> {
-    return this.userRepository.createQueryBuilder("user")
-    .select(["user.id", "user.email",]) //DO NOT RETURN THE PASSWORD
-    .getOne()
+  async getUser(sub: string): Promise<User | undefined> {
+    return this.userRepository.findOne({
+        where:{id: sub}, select: ["id", "email"]
+      });
   }
 }

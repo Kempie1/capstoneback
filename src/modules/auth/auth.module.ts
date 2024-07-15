@@ -10,10 +10,15 @@ import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ShoppingCart } from '../cart/entities/ShoppingCart.entity';
+import { EmailModule } from '../email/email.module';
+import { PasswordReset } from './entities/PasswordReset.entity';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ShoppingCart]),
+    TypeOrmModule.forFeature([ShoppingCart, PasswordReset]),
+    ConfigModule.forRoot(),
+    EmailModule,
     UsersModule,
     PassportModule.register({ session: true }),
     JwtModule.register({
