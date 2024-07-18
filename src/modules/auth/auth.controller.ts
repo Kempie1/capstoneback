@@ -1,5 +1,5 @@
 
-import { Body, Controller, Post, HttpCode, HttpStatus, UseGuards, Request, Get } from '@nestjs/common';
+import { Body, Controller, Post, HttpCode, HttpStatus, UseGuards, Request, Get, Delete } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
 import {
@@ -43,6 +43,20 @@ export class AuthController {
     return this.authService.login(req.user);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('session')
+  getSessionInfo(@Request() req) {
+    return req.user;
+  }
+
+  // TODO Implenet session invalidation
+  @UseGuards(JwtAuthGuard)
+  @Post('logout')
+  logout(@Request() req) {
+    // Invalidate the session token or perform other cleanup actions
+    // return this.authService.logout(req.user);
+  }
+
   @Post('request-password-reset')
   async requestResetPassword(@Body() body: ResetPasswordDto) {
     return this.authService.requestResetPassword(body);
@@ -51,7 +65,7 @@ export class AuthController {
   @Post('verify-password-reset')
   async verifytResetPassword(@Body() body: VerifyResetPasswordDto) {
     let result = await this.authService.verifyResetToken(body)
-    return {validToken: result};
+    return { validToken: result };
   }
 
   @Post('complete-password-reset')
