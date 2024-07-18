@@ -40,6 +40,6 @@ describe('ProductsService', () => {
 
     jest.spyOn(service, 'getProduct').mockImplementation(() => Promise.resolve(product));
 
-    expect(await service.getProduct('1')).toBe(product);
+    expect(await service.getProductFlattened('1')).toBe(product);
   });
 });

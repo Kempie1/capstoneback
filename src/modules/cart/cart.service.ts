@@ -20,8 +20,12 @@ export class CartService {
         private productsRepository: Repository<Product>,
       ) { }
 
-    getCart(req) {
-        return this.shoppingCartRepository.findOne({where:{user: req.user.sub}, relations: ['cartItems']});
+    getCart(req, getUser?: boolean) {
+        let relations = ['cartItems'];
+        if (getUser) {
+            relations.push('user');
+        }
+            return this.shoppingCartRepository.findOne({where:{user: req.user.sub}, relations: relations});   
     }
 
     async addProductToCart(req, body: AddToCartDto) {

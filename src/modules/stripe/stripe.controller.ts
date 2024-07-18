@@ -1,8 +1,9 @@
-import { Body, Controller, Request, Get, UseGuards } from '@nestjs/common';
+import { Body, Controller, Request, Get, UseGuards, Post, Headers, RawBodyRequest } from '@nestjs/common';
 import { StripeService } from './stripe.service';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { CheckoutDto } from './dtos/checkout.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { request } from 'http';
 
 @ApiTags('Stripe')
 @Controller('stripe')
@@ -23,7 +24,18 @@ export class StripeController {
   @ApiSecurity('bearer')
   @UseGuards(JwtAuthGuard)
   @Get('checkout')
-  async getCheckout(@Request() req) {
+  async getCheckout(@Request() req:Request) {
     return await this.stripeService.getCheckout(req);
   }
+
+  @Get('fulfill-checkout')
+  async fulfillCheckout(@Request() req:Request) {
+    return await this.stripeService.fulfillCheckout(req);
+  }
+
+  @Post('webhook')
+  async webhook(@Request() req: RawBodyRequest<Request>) {
+    return await this.stripeService.webhook(req);
+  }
+
 }

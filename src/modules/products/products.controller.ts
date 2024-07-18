@@ -35,6 +35,6 @@ export class ProductsController {
 
   @Get('/product/:id')
   getProduct(@Param('id', ParseUUIDPipe) id: string){
-    return this.productsService.getProduct(id);
+    return this.productsService.getProductFlattened(id);
   }
 }

@@ -20,10 +20,14 @@ export class ProductsService {
 
   //Get Product
   async getProduct(id: string) {
-     let data = this.flattenProduct(await this.productsRepository.findOne({
+    return this.productsRepository.findOne({
       relations: ['productCharacteristics'],
       where: { id: id },
-    }));
+    });
+  }
+
+  async getProductFlattened(id: string) {
+     let data = this.flattenProduct(await this.getProduct(id));
     return data
   }
 

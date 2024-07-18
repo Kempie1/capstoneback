@@ -11,7 +11,6 @@ import { randomBytes } from 'crypto';
 import { PasswordReset } from './entities/PasswordReset.entity';
 import { ConfigService } from '@nestjs/config';
 import { EmailService } from '../email/email.service';
-import { BroadcasterResult } from 'typeorm/subscriber/BroadcasterResult';
 import { VerifyResetPasswordDto } from './dtos/verifyPasswordReset.dto';
 import { CompleteResetPasswordDto } from './dtos/completePasswordReset.dto';
 import { ResetPasswordDto } from './dtos/resetPassword.dto';
