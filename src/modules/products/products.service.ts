@@ -83,7 +83,7 @@ export class ProductsService {
 
     // Check if keyword is defined and add condition for product search by name
     if (keyword) {
-      qb = qb.andWhere('products.name ILIKE :keyword', { keyword: `%${keyword}%` });
+      qb = qb.andWhere('(products.name ILIKE :keyword OR productCharacteristic.value ILIKE :keyword)', { keyword: `%${keyword}%` });
     }
 
     const order = query.sortBy === 'LowHigh' ? 'DESC' : 'ASC' || 'DESC';
@@ -99,7 +99,15 @@ export class ProductsService {
     //flatten the data
     let flatData = []
     data[0].forEach((product) => {
-      flatData.push(this.flattenProduct(product));
+      let flatProduct = this.flattenProduct(product);
+            // If product is a GPU, append chipset to its name
+      if (product.categories.some(category => category.name === 'video-card')) {
+        const chipsetCharacteristic = flatProduct.characteristics.find(characteristic => characteristic.characteristicName === 'chipset');
+    if (chipsetCharacteristic) {
+      flatProduct.name = `${flatProduct.name} ${chipsetCharacteristic.value}`;
+    }
+      }
+      flatData.push(flatProduct);
     })
 
     let result = {
