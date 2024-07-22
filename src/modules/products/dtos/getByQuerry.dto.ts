@@ -32,7 +32,7 @@ export class GetByQueryDto {
     @IsOptional()
     @Transform(({ value }) => {
         try {
-            return typeof value === 'string' ? JSON.parse(value) : value;
+            return typeof value === 'string' ? JSON.parse(decodeURIComponent(value)) : value;
         } catch (error) {
             throw new Error('Invalid JSON format for filters');
         }

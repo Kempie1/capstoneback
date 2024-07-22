@@ -15,7 +15,7 @@ import { User } from '../../users/entities/User.entity';
     @PrimaryGeneratedColumn('uuid')
     id: string;
   
-    @OneToMany(() => CartItem, (cart_item) => cart_item.shoppingCart, {nullable: true})
+    @OneToMany(() => CartItem, (cart_item) => cart_item.shoppingCart, {nullable: true, cascade:true})
     cartItems: CartItem[];
 
     @OneToOne(() => User)

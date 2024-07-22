@@ -21,7 +21,6 @@ export class ProductsService {
   //Get Product
   async getProduct(id: string) {
     return this.productsRepository.findOne({
-      relations: ['productCharacteristics'],
       where: { id: id },
     });
   }
@@ -32,7 +31,7 @@ export class ProductsService {
   }
 
 
-  private flattenProduct(product: Product): FlattenProduct {
+  flattenProduct(product: Product): FlattenProduct {
     const flatProduct: FlattenProduct = {
       id: product.id,
       name: product.name,
@@ -57,7 +56,6 @@ export class ProductsService {
     const pageNumber: number = +query.page || 1;
     const skip = (pageNumber - 1) * pageSize;
     const { category, filters, keyword } = query;
-
     // Start building the query
     let qb = this.productsRepository
       .createQueryBuilder('products')
@@ -74,9 +72,9 @@ export class ProductsService {
     if (filters && Object.keys(filters).length > 0) {
       Object.entries(filters).forEach(([key, value], index) => {
         const paramName = `value${index}`;
-        qb = qb.andWhere(`characteristic.name = :name${index} AND productCharacteristic.value IN (:...${paramName})`, {
-          [`name${index}`]: key,
-          [paramName]: value,
+        const valuesArray = Array.isArray(value) ? value : [value];
+        qb = qb.andWhere(`productCharacteristic.value IN (:...${paramName})`, {
+          [paramName]: valuesArray,
         });
       });
     }
@@ -86,15 +84,35 @@ export class ProductsService {
       qb = qb.andWhere('(products.name ILIKE :keyword OR productCharacteristic.value ILIKE :keyword)', { keyword: `%${keyword}%` });
     }
 
+    const allProducts = await qb.getMany();
+
+    // Initialize counts
+    let categoryCounts = {};
+    let characteristicCounts = {};
+
+    // Count categories and characteristics for all products
+    allProducts.forEach((product) => {
+      product.categories.forEach((category) => {
+        categoryCounts[category.name] = (categoryCounts[category.name] || 0) + 1;
+      });
+      product.productCharacteristics.forEach((characteristic) => {
+        const charName = characteristic.characteristic.name;
+    const charValue = characteristic.value;
+    if (!characteristicCounts[charName]) {
+      characteristicCounts[charName] = {};
+    }
+    characteristicCounts[charName][charValue] = (characteristicCounts[charName][charValue] || 0) + 1;
+      });
+    });
     const order = query.sortBy === 'LowHigh' ? 'DESC' : 'ASC' || 'DESC';
 
     // Apply sorting and pagination
-    qb = qb.orderBy('products.price', order)
+    let paginatedQb = qb.orderBy('products.price', order)
       .skip(skip)
       .take(pageSize);
 
     // Execute the query
-    const data = await qb.getManyAndCount()
+    const data = await paginatedQb.getManyAndCount()
 
     //flatten the data
     let flatData = []
@@ -115,10 +133,74 @@ export class ProductsService {
       totalPages: Math.ceil(data[1] / pageSize),
       currentPage: pageNumber,
       pageSize: pageSize,
+      categoryCounts: categoryCounts,
+      characteristicCounts: characteristicCounts,
     }
 
     return result;
   }
+
+  // async getCount(query: GetByQueryDto) {
+  //   const pageSize: number = 20;
+  //   const pageNumber: number = +query.page || 1;
+  //   const skip = (pageNumber - 1) * pageSize;
+  //   const { category, filters, keyword } = query;
+  //   // Start building the query
+  //   let qb = this.productsRepository
+  //     .createQueryBuilder('products')
+  //     .leftJoinAndSelect('products.categories', 'category')
+  //     .leftJoinAndSelect('products.productCharacteristics', 'productCharacteristic')
+  //     .leftJoinAndSelect('productCharacteristic.characteristic', 'characteristic');
+
+  //   // Check if category is defined and add condition
+  //   if (category) {
+  //     qb = qb.andWhere('category.name = :category', { category });
+  //   }
+
+  //   // Use filters if defined
+  //   if (filters && Object.keys(filters).length > 0) {
+  //     Object.entries(filters).forEach(([key, value], index) => {
+  //       const paramName = `value${index}`;
+  //       const valuesArray = Array.isArray(value) ? value : [value];
+  //       qb = qb.andWhere(`productCharacteristic.value IN (:...${paramName})`, {
+  //         [paramName]: valuesArray,
+  //       });
+  //     });
+  //   }
+
+  //   // Check if keyword is defined and add condition for product search by name
+  //   if (keyword) {
+  //     qb = qb.andWhere('(products.name ILIKE :keyword OR productCharacteristic.value ILIKE :keyword)', { keyword: `%${keyword}%` });
+  //   }
+
+  //   const allProducts = await qb.getMany();
+
+  //   // Initialize counts
+  //   let categoryCounts = {};
+  //   let characteristicCounts = {};
+
+  //   // Count categories and characteristics for all products
+  //   allProducts.forEach((product) => {
+  //     product.categories.forEach((category) => {
+  //       categoryCounts[category.name] = (categoryCounts[category.name] || 0) + 1;
+  //     });
+  //     product.productCharacteristics.forEach((characteristic) => {
+  //       const charName = characteristic.characteristic.name;
+  //   const charValue = characteristic.value;
+  //   if (!characteristicCounts[charName]) {
+  //     characteristicCounts[charName] = {};
+  //   }
+  //   characteristicCounts[charName][charValue] = (characteristicCounts[charName][charValue] || 0) + 1;
+  //     });
+  //   });
+
+  //   let result = {
+  //     categoryCounts: categoryCounts,
+  //     characteristicCounts: characteristicCounts,
+  //   }
+  //   console.log("countResult", result)
+  //   return result;
+  // }
 
 
   async getRelatedProduct(query: GetRelatedProductDTO) {

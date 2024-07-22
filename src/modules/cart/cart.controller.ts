@@ -33,4 +33,8 @@ export class CartController {
     async editProductInCart(@Body() body: EditProductInCartDto, @Request() req) {
         return this.cartService.editProductInCart(req,body);
     }
+    @Get('/compatibility')
+    async compatibilityCheck(@Request() req) {
+        return this.cartService.compatibilityCheck(req);
+    }
 }

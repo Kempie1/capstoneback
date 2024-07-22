@@ -1,4 +1,4 @@
-import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe, Query, Body, Post } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { GetByCategoryDTO } from './dtos/getCategory.dto';
 import { GetByQueryDto } from './dtos/getByQuerry.dto';
@@ -22,6 +22,11 @@ export class ProductsController {
   async getProductBySearch(@Query() query: GetByQueryDto) {
     return this.productsService.get(query);
   }
+
+  // @Get('/searchCount')
+  // async getProductCountBySearch(@Query() query: GetByQueryDto) {
+  //   return this.productsService.getCount(query);
+  // }
 
   @Get('/category')
   async getProductByCategory(@Query() query: GetByCategoryDTO) {
