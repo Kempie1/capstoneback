@@ -32,7 +32,7 @@ export enum CategoriesEnum {
 }
 
 // Disable eslint because of duplicate enum values
-/* eslint-disable */ 
+/* eslint-disable */
 export enum CaseFormFactorEnum {
   'ATX Full Tower' = 0,
   'ATX Desktop' = 1,
