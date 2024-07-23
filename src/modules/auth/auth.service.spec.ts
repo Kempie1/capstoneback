@@ -34,24 +34,24 @@ describe('AuthService', () => {
           useValue: {
             sendForgotPasswordEmail: jest.fn(),
             sendPasswordResetEmail: jest.fn(),
-          }
+          },
         },
         {
           provide: ConfigService,
           useValue: {
             get: jest.fn((key: string) => {
               if (key === 'FRONTEND_URL') {
-                return "test.com";
+                return 'test.com';
               }
               return null;
-            })
+            }),
           },
         },
         {
           provide: JwtService,
           useValue: {
             sign: jest.fn(),
-          }
+          },
         },
       ],
     }).compile();

@@ -13,7 +13,6 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { EmailModule } from './modules/email/email.module';
 import mailerConfig from 'config/email.config';
 
-
 @Module({
   imports: [
     TypeOrmModule.forRoot(config),
@@ -30,4 +29,4 @@ import mailerConfig from 'config/email.config';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

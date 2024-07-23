@@ -2,12 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CartService } from './cart.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { ShoppingCart } from './entities/ShoppingCart.entity';
-import { Repository } from 'typeorm';
 import { CartItem } from './entities/CartItem.entity';
 import { Product } from '../products/entities/Product.entity';
 import { ProductsService } from '../products/products.service';
 import { mockRepository } from 'test/testingUtils';
-
 
 describe('CartService', () => {
   let service: CartService;
@@ -15,10 +13,12 @@ describe('CartService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [CartService, {
-        provide: getRepositoryToken(ShoppingCart),
-        useValue: repositoryMock,
-      },
+      providers: [
+        CartService,
+        {
+          provide: getRepositoryToken(ShoppingCart),
+          useValue: repositoryMock,
+        },
         {
           provide: getRepositoryToken(CartItem),
           useValue: repositoryMock,
@@ -31,9 +31,9 @@ describe('CartService', () => {
           provide: ProductsService,
           useValue: {
             flattenProduct: jest.fn(),
-          }
-
-        }],
+          },
+        },
+      ],
     }).compile();
 
     service = module.get<CartService>(CartService);

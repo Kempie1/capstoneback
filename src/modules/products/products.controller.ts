@@ -1,11 +1,8 @@
-import { Controller, Get, Param, ParseUUIDPipe, Query, Body, Post } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { GetByCategoryDTO } from './dtos/getCategory.dto';
 import { GetByQueryDto } from './dtos/getByQuerry.dto';
-import {
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { GetRelatedProductDTO } from './dtos/getRelatedProduct.dto';
 
 @ApiTags('Products')
@@ -24,12 +21,12 @@ export class ProductsController {
   }
 
   @Get('/related')
-  getRelatedProduct(@Query() query: GetRelatedProductDTO){
+  getRelatedProduct(@Query() query: GetRelatedProductDTO) {
     return this.productsService.getRelatedProduct(query);
   }
 
   @Get('/product/:id')
-  getProduct(@Param('id', ParseUUIDPipe) id: string){
+  getProduct(@Param('id', ParseUUIDPipe) id: string) {
     return this.productsService.getProductFlattened(id);
   }
 }

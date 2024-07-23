@@ -1,16 +1,17 @@
-
-import { Body, Controller, Post, HttpCode, HttpStatus, UseGuards, Request, Get, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  UseGuards,
+  Request,
+  Get,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
-import {
-  ApiBody,
-  ApiSecurity,
-  ApiTags
-} from '@nestjs/swagger';
+import { ApiBody, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { UserDto } from './dtos/user.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { EmailService } from '../email/email.service';
 import { ResetPasswordDto } from './dtos/resetPassword.dto';
 import { VerifyResetPasswordDto } from './dtos/verifyPasswordReset.dto';
 import { CompleteResetPasswordDto } from './dtos/completePasswordReset.dto';
@@ -21,7 +22,7 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private userService: UsersService,
-  ) { }
+  ) {}
 
   @ApiSecurity('bearer')
   @UseGuards(JwtAuthGuard)
@@ -51,7 +52,8 @@ export class AuthController {
   // TODO Implenet session invalidation
   @UseGuards(JwtAuthGuard)
   @Post('logout')
-  logout(@Request() req) {
+  logout() {
+    // @Request() req
     // Invalidate the session token or perform other cleanup actions
     // return this.authService.logout(req.user);
   }
@@ -63,7 +65,7 @@ export class AuthController {
 
   @Post('verify-password-reset')
   async verifytResetPassword(@Body() body: VerifyResetPasswordDto) {
-    let result = await this.authService.verifyResetToken(body)
+    const result = await this.authService.verifyResetToken(body);
     return { validToken: result };
   }
 

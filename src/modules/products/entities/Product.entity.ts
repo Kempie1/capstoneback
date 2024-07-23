@@ -28,7 +28,8 @@ export class Product {
 
   @ManyToMany(
     () => ProductCharacteristic,
-    (productCharacteristic) => productCharacteristic.products, { eager: true }
+    (productCharacteristic) => productCharacteristic.products,
+    { eager: true },
   )
   productCharacteristics: ProductCharacteristic[];
 }

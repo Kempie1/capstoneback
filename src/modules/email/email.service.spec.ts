@@ -1,31 +1,32 @@
 import { Test } from '@nestjs/testing';
 import { EmailService } from './email.service';
-import { MailerModule, MailerService } from '@nestjs-modules/mailer';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import mailerConfig from '../../../config/email.config';
+import { MailerService } from '@nestjs-modules/mailer';
+import { ConfigService } from '@nestjs/config';
 
 describe('EmailService', () => {
   let service: EmailService;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
-      providers: [EmailService, 
+      providers: [
+        EmailService,
         {
-        provide: ConfigService,
-        useValue: {
-          get: jest.fn((key: string) => {
-            if (key === 'HOME_EMAIL') {
-              return "noreply@example.com";
-            }
-            return null;
-          })
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn((key: string) => {
+              if (key === 'HOME_EMAIL') {
+                return 'noreply@example.com';
+              }
+              return null;
+            }),
+          },
         },
-      },
         {
-          provide: MailerService, useValue: {
-            sendMail: jest.fn()
-          }
-        }
+          provide: MailerService,
+          useValue: {
+            sendMail: jest.fn(),
+          },
+        },
       ],
     }).compile();
 

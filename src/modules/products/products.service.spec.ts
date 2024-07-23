@@ -1,8 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsService } from './products.service';
 import { Product } from './entities/Product.entity';
-import { Category } from './entities/Category.entity';
-import { ProductCharacteristic } from './entities/ProductCharacteristic.entity';
 import { mockRepository } from 'test/testingUtils';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
@@ -12,7 +10,8 @@ describe('ProductsService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ProductsService,
+      providers: [
+        ProductsService,
         {
           provide: getRepositoryToken(Product),
           useValue: repositoryMock,
@@ -31,16 +30,16 @@ describe('ProductsService', () => {
   //     id: '1',
   //     name: 'test-category'
   //   }
-    
+
   //   const testCharacteristic: ProductCharacteristic = {
   //     id: '1',
   //     value: 'test-value',
   //     products: [],
   //     characteristic: null
   //   }
-  //   const product: Product = { 
-  //     id: '1', 
-  //     name: 'Test Product', 
+  //   const product: Product = {
+  //     id: '1',
+  //     name: 'Test Product',
   //     imgUrl: 'test-img-url',
   //     categories: [category],
   //     productCharacteristics: [testCharacteristic],

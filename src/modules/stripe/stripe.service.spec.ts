@@ -16,7 +16,8 @@ describe('StripeService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [StripeService,
+      providers: [
+        StripeService,
         {
           provide: getRepositoryToken(User),
           useValue: repositoryMock,
@@ -37,30 +38,30 @@ describe('StripeService', () => {
           provide: CartService,
           useValue: {
             getCart: jest.fn(),
-          }
+          },
         },
         {
           provide: EmailService,
           useValue: {
             sendOrder: jest.fn(),
-          }
+          },
         },
         {
           provide: 'STRIPE_API_KEY',
-          useValue: "blablabalbalbla",
+          useValue: 'blablabalbalbla',
         },
         {
           provide: ConfigService,
           useValue: {
             get: jest.fn((key: string) => {
               if (key === 'FRONTEND_URL') {
-                return "test.com";
+                return 'test.com';
               }
               if (key === 'STRIPE_WEBHOOK_SECRET') {
-                return "blablablabla";
+                return 'blablablabla';
               }
               return null;
-            })
+            }),
           },
         },
       ],
