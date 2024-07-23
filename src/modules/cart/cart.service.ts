@@ -1,15 +1,13 @@
-import { BadRequestException, Injectable, UseGuards } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CartItem } from './entities/CartItem.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ShoppingCart } from './entities/ShoppingCart.entity';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AddToCartDto } from './dtos/addToCart.dto';
 import { EditProductInCartDto } from './dtos/editProductInCart.dto';
 import { RemoveFromCartDto } from './dtos/removeFromCart.dto';
 import { Product } from '../products/entities/Product.entity';
 import { ProductsService } from '../products/products.service';
-import { FlattenProduct } from '../utils/types';
 
 import { CaseFormFactorEnum, MotherboardFormFactorEnum, CPUSocketDDRSupportEnum, GPUChipsetTDP } from '../utils/enums';
 @Injectable()

@@ -89,21 +89,6 @@ export class AuthService {
     }
   }
 
-  // async createPasswordResetToken(user: User) {
-  //   //generate a token for the user
-  //   const token = randomBytes(16).toString('hex');
-  //   const saltRounds = 10;
-  //   //hash the token and store it in the database
-  //   bcrypt.hash(token, saltRounds, (err, hash)  =>  {
-  //     const resetToken = new PasswordReset()
-  //     resetToken.token = hash
-  //     resetToken.user = user
-  //     resetToken.expiration = new Date(Date.now() + 900000); // 15 minutes
-  //     this.passwordResetRepository.save(resetToken).then(tokenEntity => {
-  //       return { tableId: tokenEntity.id, token: token };
-  //     })
-  //   })
-  // }
 
   async createPasswordResetToken(user: User): Promise<{ tableId: string; token: string }> {
     try {

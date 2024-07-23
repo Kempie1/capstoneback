@@ -13,20 +13,10 @@ import { GetRelatedProductDTO } from './dtos/getRelatedProduct.dto';
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
-  @Get()
-  getEmoji(): string {
-    return this.productsService.getEmoji();
-  }
-
   @Get('/search')
   async getProductBySearch(@Query() query: GetByQueryDto) {
     return this.productsService.get(query);
   }
-
-  // @Get('/searchCount')
-  // async getProductCountBySearch(@Query() query: GetByQueryDto) {
-  //   return this.productsService.getCount(query);
-  // }
 
   @Get('/category')
   async getProductByCategory(@Query() query: GetByCategoryDTO) {
