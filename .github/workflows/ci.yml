@@ -1,0 +1,43 @@
+name: PartsShop / Format, Lint, test
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20]
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Run tests with ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Cache node modules
+        uses: actions/cache@preview
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      
+      - name: yarn install, build
+        run: |
+          yarn install
+          yarn build
+      
+      - name: eslint check
+        run: yarn lint:ci
+
+      - name: format check
+        run: yarn format:ci
