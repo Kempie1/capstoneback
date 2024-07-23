@@ -14,11 +14,6 @@ export class ProductsService {
     private productsRepository: Repository<Product>,
   ) { }
 
-  getEmoji(): string {
-    return '🦊';
-  }
-
-  //Get Product
   async getProduct(id: string) {
     return this.productsRepository.findOne({
       where: { id: id },

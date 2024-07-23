@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
-import { Product } from '../products/entities/Product.entity';
 import { OrderItem } from '../stripe/entities/OrderItem.entity';
 
 @Injectable()

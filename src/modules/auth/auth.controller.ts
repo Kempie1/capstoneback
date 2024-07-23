@@ -21,7 +21,6 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private userService: UsersService,
-    private emailService: EmailService
   ) { }
 
   @ApiSecurity('bearer')
