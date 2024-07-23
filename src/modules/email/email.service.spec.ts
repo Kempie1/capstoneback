@@ -9,23 +9,25 @@ describe('EmailService', () => {
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
-      providers: [EmailService, 
+      providers: [
+        EmailService,
         {
-        provide: ConfigService,
-        useValue: {
-          get: jest.fn((key: string) => {
-            if (key === 'HOME_EMAIL') {
-              return "noreply@example.com";
-            }
-            return null;
-          })
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn((key: string) => {
+              if (key === 'HOME_EMAIL') {
+                return 'noreply@example.com';
+              }
+              return null;
+            }),
+          },
         },
-      },
         {
-          provide: MailerService, useValue: {
-            sendMail: jest.fn()
-          }
-        }
+          provide: MailerService,
+          useValue: {
+            sendMail: jest.fn(),
+          },
+        },
       ],
     }).compile();
 

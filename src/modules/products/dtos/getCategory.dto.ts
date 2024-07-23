@@ -1,4 +1,4 @@
-import { IsEnum, IsOptional, Min, IsInt} from 'class-validator';
+import { IsEnum, IsOptional, Min, IsInt } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { sortByEnum, CategoriesEnum } from '../../utils/enums';
 import { ApiPropertyOptional } from '@nestjs/swagger';
@@ -8,14 +8,13 @@ export class GetByCategoryDTO {
   category: CategoriesEnum;
 
   @IsOptional()
-  @IsEnum(sortByEnum) 
+  @IsEnum(sortByEnum)
   sortBy?: sortByEnum;
 
   @ApiPropertyOptional()
-  @Transform(({ value }) => value ? parseInt(value, 10) : undefined)
+  @Transform(({ value }) => (value ? parseInt(value, 10) : undefined))
   @IsInt()
   @Min(1)
   @IsOptional()
   page: number;
-
 }

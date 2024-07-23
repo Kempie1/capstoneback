@@ -12,18 +12,18 @@ import { EmailModule } from '../email/email.module';
 
 @Module({})
 export class StripeModule {
-
   static forRootAsync(): DynamicModule {
     return {
       module: StripeModule,
       controllers: [StripeController],
       imports: [
-        ConfigModule.forRoot(), 
+        ConfigModule.forRoot(),
         CartModule,
-        EmailModule, 
+        EmailModule,
         ProductsModule,
-        UsersModule, 
-        TypeOrmModule.forFeature([OrderItem, Order]),],
+        UsersModule,
+        TypeOrmModule.forFeature([OrderItem, Order]),
+      ],
       providers: [
         StripeService,
         {

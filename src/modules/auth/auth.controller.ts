@@ -1,12 +1,17 @@
-
-import { Body, Controller, Post, HttpCode, HttpStatus, UseGuards, Request, Get, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  HttpCode,
+  HttpStatus,
+  UseGuards,
+  Request,
+  Get,
+  Delete,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
-import {
-  ApiBody,
-  ApiSecurity,
-  ApiTags
-} from '@nestjs/swagger';
+import { ApiBody, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { UserDto } from './dtos/user.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -21,7 +26,7 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private userService: UsersService,
-  ) { }
+  ) {}
 
   @ApiSecurity('bearer')
   @UseGuards(JwtAuthGuard)
@@ -63,7 +68,7 @@ export class AuthController {
 
   @Post('verify-password-reset')
   async verifytResetPassword(@Body() body: VerifyResetPasswordDto) {
-    let result = await this.authService.verifyResetToken(body)
+    const result = await this.authService.verifyResetToken(body);
     return { validToken: result };
   }
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository, } from '@nestjs/typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Not } from 'typeorm';
 import { Product } from './entities/Product.entity';
 import { GetByCategoryDTO } from './dtos/getCategory.dto';
@@ -12,7 +12,7 @@ export class ProductsService {
   constructor(
     @InjectRepository(Product)
     private productsRepository: Repository<Product>,
-  ) { }
+  ) {}
 
   async getProduct(id: string) {
     return this.productsRepository.findOne({
@@ -21,10 +21,9 @@ export class ProductsService {
   }
 
   async getProductFlattened(id: string) {
-     let data = this.flattenProduct(await this.getProduct(id));
-    return data
+    const data = this.flattenProduct(await this.getProduct(id));
+    return data;
   }
-
 
   flattenProduct(product: Product): FlattenProduct {
     const flatProduct: FlattenProduct = {
@@ -55,8 +54,14 @@ export class ProductsService {
     let qb = this.productsRepository
       .createQueryBuilder('products')
       .leftJoinAndSelect('products.categories', 'category')
-      .leftJoinAndSelect('products.productCharacteristics', 'productCharacteristic')
-      .leftJoinAndSelect('productCharacteristic.characteristic', 'characteristic');
+      .leftJoinAndSelect(
+        'products.productCharacteristics',
+        'productCharacteristic',
+      )
+      .leftJoinAndSelect(
+        'productCharacteristic.characteristic',
+        'characteristic',
+      );
 
     // Check if category is defined and add condition
     if (category) {
@@ -76,61 +81,71 @@ export class ProductsService {
 
     // Check if keyword is defined and add condition for product search by name
     if (keyword) {
-      qb = qb.andWhere('(products.name ILIKE :keyword OR productCharacteristic.value ILIKE :keyword)', { keyword: `%${keyword}%` });
+      qb = qb.andWhere(
+        '(products.name ILIKE :keyword OR productCharacteristic.value ILIKE :keyword)',
+        { keyword: `%${keyword}%` },
+      );
     }
 
     const allProducts = await qb.getMany();
 
     // Initialize counts
-    let categoryCounts = {};
-    let characteristicCounts = {};
+    const categoryCounts = {};
+    const characteristicCounts = {};
 
     // Count categories and characteristics for all products
     allProducts.forEach((product) => {
       product.categories.forEach((category) => {
-        categoryCounts[category.name] = (categoryCounts[category.name] || 0) + 1;
+        categoryCounts[category.name] =
+          (categoryCounts[category.name] || 0) + 1;
       });
       product.productCharacteristics.forEach((characteristic) => {
         const charName = characteristic.characteristic.name;
-    const charValue = characteristic.value;
-    if (!characteristicCounts[charName]) {
-      characteristicCounts[charName] = {};
-    }
-    characteristicCounts[charName][charValue] = (characteristicCounts[charName][charValue] || 0) + 1;
+        const charValue = characteristic.value;
+        if (!characteristicCounts[charName]) {
+          characteristicCounts[charName] = {};
+        }
+        characteristicCounts[charName][charValue] =
+          (characteristicCounts[charName][charValue] || 0) + 1;
       });
     });
     const order = query.sortBy === 'LowHigh' ? 'DESC' : 'ASC' || 'DESC';
 
     // Apply sorting and pagination
-    let paginatedQb = qb.orderBy('products.price', order)
+    const paginatedQb = qb
+      .orderBy('products.price', order)
       .skip(skip)
       .take(pageSize);
 
     // Execute the query
-    const data = await paginatedQb.getManyAndCount()
+    const data = await paginatedQb.getManyAndCount();
 
     //flatten the data
-    let flatData = []
+    const flatData = [];
     data[0].forEach((product) => {
-      let flatProduct = this.flattenProduct(product);
-            // If product is a GPU, append chipset to its name
-      if (product.categories.some(category => category.name === 'video-card')) {
-        const chipsetCharacteristic = flatProduct.characteristics.find(characteristic => characteristic.characteristicName === 'chipset');
-    if (chipsetCharacteristic) {
-      flatProduct.name = `${flatProduct.name} ${chipsetCharacteristic.value}`;
-    }
+      const flatProduct = this.flattenProduct(product);
+      // If product is a GPU, append chipset to its name
+      if (
+        product.categories.some((category) => category.name === 'video-card')
+      ) {
+        const chipsetCharacteristic = flatProduct.characteristics.find(
+          (characteristic) => characteristic.characteristicName === 'chipset',
+        );
+        if (chipsetCharacteristic) {
+          flatProduct.name = `${flatProduct.name} ${chipsetCharacteristic.value}`;
+        }
       }
       flatData.push(flatProduct);
-    })
+    });
 
-    let result = {
+    const result = {
       products: flatData,
       totalPages: Math.ceil(data[1] / pageSize),
       currentPage: pageNumber,
       pageSize: pageSize,
       categoryCounts: categoryCounts,
       characteristicCounts: characteristicCounts,
-    }
+    };
 
     return result;
   }
@@ -197,13 +212,12 @@ export class ProductsService {
   //   return result;
   // }
 
-
   async getRelatedProduct(query: GetRelatedProductDTO) {
     return this.productsRepository.find({
       relations: ['productCharacteristics'],
       where: {
         id: Not(query.id),
-        name: query.name
+        name: query.name,
       },
     });
   }

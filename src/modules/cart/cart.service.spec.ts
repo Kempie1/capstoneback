@@ -8,17 +8,18 @@ import { Product } from '../products/entities/Product.entity';
 import { ProductsService } from '../products/products.service';
 import { mockRepository } from 'test/testingUtils';
 
-
 describe('CartService', () => {
   let service: CartService;
   let repositoryMock: typeof mockRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [CartService, {
-        provide: getRepositoryToken(ShoppingCart),
-        useValue: repositoryMock,
-      },
+      providers: [
+        CartService,
+        {
+          provide: getRepositoryToken(ShoppingCart),
+          useValue: repositoryMock,
+        },
         {
           provide: getRepositoryToken(CartItem),
           useValue: repositoryMock,
@@ -31,9 +32,9 @@ describe('CartService', () => {
           provide: ProductsService,
           useValue: {
             flattenProduct: jest.fn(),
-          }
-
-        }],
+          },
+        },
+      ],
     }).compile();
 
     service = module.get<CartService>(CartService);
