@@ -1,16 +1,8 @@
-import {
-  Controller,
-  Get,
-  Param,
-  ParseUUIDPipe,
-  Query,
-  Body,
-  Post,
-} from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { GetByCategoryDTO } from './dtos/getCategory.dto';
 import { GetByQueryDto } from './dtos/getByQuerry.dto';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { GetRelatedProductDTO } from './dtos/getRelatedProduct.dto';
 
 @ApiTags('Products')

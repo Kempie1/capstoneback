@@ -5,9 +5,8 @@ import {
   IsString,
   Min,
   IsInt,
-  ValidateNested,
 } from 'class-validator';
-import { Transform, Type } from 'class-transformer';
+import { Transform } from 'class-transformer';
 import { sortByEnum, CategoriesEnum } from '../../utils/enums';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 

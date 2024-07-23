@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CartService } from './cart.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { ShoppingCart } from './entities/ShoppingCart.entity';
-import { Repository } from 'typeorm';
 import { CartItem } from './entities/CartItem.entity';
 import { Product } from '../products/entities/Product.entity';
 import { ProductsService } from '../products/products.service';

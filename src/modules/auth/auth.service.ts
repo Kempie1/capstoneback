@@ -2,7 +2,6 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
-  Res,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -46,6 +45,7 @@ export class AuthService {
             if (err) {
               reject(err); // Handle error
             } else if (result) {
+              // eslint-disable-next-line
               const { password, ...output } = user;
               resolve(output); // Password matches, return user data
             } else {

@@ -1,8 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsService } from './products.service';
 import { Product } from './entities/Product.entity';
-import { Category } from './entities/Category.entity';
-import { ProductCharacteristic } from './entities/ProductCharacteristic.entity';
 import { mockRepository } from 'test/testingUtils';
 import { getRepositoryToken } from '@nestjs/typeorm';
 

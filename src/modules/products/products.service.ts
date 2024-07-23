@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Not } from 'typeorm';
 import { Product } from './entities/Product.entity';
-import { GetByCategoryDTO } from './dtos/getCategory.dto';
 import { GetByQueryDto } from './dtos/getByQuerry.dto';
 import { GetRelatedProductDTO } from './dtos/getRelatedProduct.dto';
 import { FlattenProduct } from '../utils/types';
@@ -70,7 +69,7 @@ export class ProductsService {
 
     // Use filters if defined
     if (filters && Object.keys(filters).length > 0) {
-      Object.entries(filters).forEach(([key, value], index) => {
+      Object.entries(filters).forEach(([, value], index) => {
         const paramName = `value${index}`;
         const valuesArray = Array.isArray(value) ? value : [value];
         qb = qb.andWhere(`productCharacteristic.value IN (:...${paramName})`, {

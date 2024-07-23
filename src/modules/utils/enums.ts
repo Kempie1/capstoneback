@@ -31,6 +31,8 @@ export enum CategoriesEnum {
   'wireless-network-card' = 'wireless-network-card',
 }
 
+// Disable eslint because of duplicate enum values
+/* eslint-disable */ 
 export enum CaseFormFactorEnum {
   'ATX Full Tower' = 0,
   'ATX Desktop' = 1,
@@ -89,3 +91,5 @@ export enum GPUChipsetTDP {
   'NVIDIA GTX 1650 Super' = 100,
   'AMD RX 5300' = 100,
 }
+
+/* eslint-enable */

@@ -1,18 +1,14 @@
 import {
-  Body,
   Controller,
   Request,
   Get,
   UseGuards,
   Post,
-  Headers,
   RawBodyRequest,
 } from '@nestjs/common';
 import { StripeService } from './stripe.service';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { CheckoutDto } from './dtos/checkout.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { request } from 'http';
 
 @ApiTags('Stripe')
 @Controller('stripe')

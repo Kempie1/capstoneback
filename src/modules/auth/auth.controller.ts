@@ -2,12 +2,9 @@ import {
   Body,
   Controller,
   Post,
-  HttpCode,
-  HttpStatus,
   UseGuards,
   Request,
   Get,
-  Delete,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
@@ -15,7 +12,6 @@ import { ApiBody, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { UserDto } from './dtos/user.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { EmailService } from '../email/email.service';
 import { ResetPasswordDto } from './dtos/resetPassword.dto';
 import { VerifyResetPasswordDto } from './dtos/verifyPasswordReset.dto';
 import { CompleteResetPasswordDto } from './dtos/completePasswordReset.dto';
@@ -56,7 +52,8 @@ export class AuthController {
   // TODO Implenet session invalidation
   @UseGuards(JwtAuthGuard)
   @Post('logout')
-  logout(@Request() req) {
+  logout() {
+    // @Request() req
     // Invalidate the session token or perform other cleanup actions
     // return this.authService.logout(req.user);
   }

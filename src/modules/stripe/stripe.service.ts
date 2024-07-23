@@ -162,7 +162,7 @@ export class StripeService {
       switch (event.type) {
         case 'checkout.session.completed':
         case 'checkout.session.async_payment_succeeded':
-          const session = event.data.object;
+          // const session = event.data.object;
           // Fulfill the purchase...
           // console.log('Fulfilling purchase', session);
           this.fulfillCheckout(event.data.object.id);
