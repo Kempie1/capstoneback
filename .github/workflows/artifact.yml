@@ -60,7 +60,7 @@ jobs:
           rm -rf node_modules .dist
           yarn cache clean
           version=$(npx -c 'echo $npm_package_version')
-          docker build -t partsshop:$version .
+          docker build . -t partsshop:$version
       
       - name: Tag and Push
         env:
