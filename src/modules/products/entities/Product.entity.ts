@@ -4,15 +4,18 @@ import {
   PrimaryGeneratedColumn,
   ManyToMany,
   JoinTable,
+  Index
 } from 'typeorm';
 import { Category } from './Category.entity';
 import { ProductCharacteristic } from './ProductCharacteristic.entity';
 
 @Entity('product')
 export class Product {
+  @Index()
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Index()
   @Column()
   name: string;
 
