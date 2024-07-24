@@ -4,7 +4,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToMany,
   JoinTable,
-  Index
+  Index,
 } from 'typeorm';
 import { Category } from './Category.entity';
 import { ProductCharacteristic } from './ProductCharacteristic.entity';

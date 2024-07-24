@@ -4,7 +4,7 @@ import {
   OneToMany,
   OneToOne,
   JoinColumn,
-  Index
+  Index,
 } from 'typeorm';
 import { CartItem } from './CartItem.entity';
 import { User } from '../../users/entities/User.entity';
