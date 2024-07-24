@@ -40,15 +40,13 @@ jobs:
       
       - name: Configure AWS credentials
         env:
-        #   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        #   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        #   aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
           AWS_DEFAULT_OUTPUT: json
         uses: aws-actions/configure-aws-credentials@v4.0.2
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+          aws-region: eu-central-1
+          role-to-assume: arn:aws:iam::008971640623:role/dockerBuilder
+          sessio-name: mySession
+
 
 
       - name: Login to Amazon ECR
