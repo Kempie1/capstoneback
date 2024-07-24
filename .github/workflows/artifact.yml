@@ -17,6 +17,10 @@ jobs:
       matrix:
         node-version: [20]
 
+    permissions:
+        id-token: write
+        contents: read
+
     steps:
       - uses: actions/checkout@v4
 
