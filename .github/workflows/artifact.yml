@@ -47,7 +47,7 @@ jobs:
           AWS_DEFAULT_OUTPUT: json
         uses: aws-actions/configure-aws-credentials@v4.0.2
         with:
-          aws-region: eu-central-1
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
           role-to-assume: arn:aws:iam::008971640623:role/dockerBuilder
 
 
