@@ -49,7 +49,6 @@ jobs:
         with:
           aws-region: eu-central-1
           role-to-assume: arn:aws:iam::008971640623:role/dockerBuilder
-          sessio-name: mySession
 
 
 
