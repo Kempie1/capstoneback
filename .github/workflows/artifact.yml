@@ -67,6 +67,5 @@ jobs:
             ecr_repository_uri: ${{ secrets.ECR_REPOSITORY_URI }}
         run: |
           version=$(npx -c 'echo $npm_package_version')
-          docker tag partsshop:$version ${{ env.ecr_repository_uri }}/partsshop:$version-${{ env.BUILD_NUMBER }}
-          docker push ${{ env.ecr_repository_uri }}/partsshop:$version-${{ env.BUILD_NUMBER }}
-          
+          docker tag partsshop:$version ${{ env.ecr_repository_uri }}:$version-${{ env.BUILD_NUMBER }}
+          docker push ${{ env.ecr_repository_uri }}:$version-${{ env.BUILD_NUMBER }}
