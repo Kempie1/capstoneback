@@ -66,6 +66,6 @@ jobs:
       - name: Tag and Push
         run: |
           version=$(npx -c 'echo $npm_package_version')
-          docker tag partsshop:latest:$version ${{ secrets.ECR_REPOSITORY_URI }}/partsshop:$version-${{ env.BUILD_NUMBER }}
+          docker tag partsshop:$version ${{ secrets.ECR_REPOSITORY_URI }}/partsshop:$version-${{ env.BUILD_NUMBER }}
           docker push ${{ secrets.ECR_REPOSITORY_URI }}/partsshop:$version-${{ env.BUILD_NUMBER }}
           
