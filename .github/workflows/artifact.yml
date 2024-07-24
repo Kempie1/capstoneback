@@ -1,0 +1,57 @@
+name: PartsShop Backend / Build Image & Push
+
+on:
+  push:
+    branches:
+      - prod
+
+
+jobs:
+  build:
+    name: Build / Artifact
+    runs-on: ubuntu-latest
+    env:
+      BUILD_NUMBER: ${{ github.run_number }}
+
+    strategy:
+      matrix:
+        node-version: [20]
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Run tests with ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Cache node modules
+        uses: actions/cache@preview
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      
+      - name: Login to Amazon ECR
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          AWS_DEFAULT_OUTPUT: json
+        run: | 
+          aws ecr get-login-password --region ${{ env.AWS_DEFAULT_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY_URI }}
+      
+      - name: Create Docker Image
+        run: |
+          rm -rf node_modules .dist
+          yarn cache clean
+          version=$(npx -c 'echo $npm_package_version')
+          docker build -t partsshop .
+      
+      - name: Tag and Push
+        run: |
+          version=$(npx -c 'echo $npm_package_version')
+          docker tag partsshop:latest:$version ${{ secrets.ECR_REPOSITORY_URI }}/partsshop:$version-${{ env.BUILD_NUMBER }}
+          docker push ${{ secrets.ECR_REPOSITORY_URI }}/partsshop:$version-${{ env.BUILD_NUMBER }}
+          
