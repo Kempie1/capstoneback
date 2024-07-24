@@ -10,6 +10,7 @@ jobs:
   build:
     name: Build / Artifact
     runs-on: ubuntu-latest
+    environment: Actions
     env:
       BUILD_NUMBER: ${{ github.run_number }}
 
@@ -17,11 +18,15 @@ jobs:
       matrix:
         node-version: [20]
 
+    permissions:
+        id-token: write
+        contents: read
+
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
 
       - name: Run tests with ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -32,26 +37,35 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-node-
+
+                    
+
+    #   - name: "Configure AWS Credentials"
+    #     uses: aws-actions/configure-aws-credentials@v4.0.2
       
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4.0.2
+        with:
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+          role-to-assume: arn:aws:iam::008971640623:role/dockerBuilder
+
+
+
       - name: Login to Amazon ECR
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-          AWS_DEFAULT_OUTPUT: json
-        run: | 
-          aws ecr get-login-password --region ${{ env.AWS_DEFAULT_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY_URI }}
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2.0.1
       
       - name: Create Docker Image
         run: |
           rm -rf node_modules .dist
           yarn cache clean
           version=$(npx -c 'echo $npm_package_version')
-          docker build -t partsshop .
+          docker build . -t partsshop:$version
       
       - name: Tag and Push
+        env:
+            ecr_repository_uri: ${{ secrets.ECR_REPOSITORY_URI }}
         run: |
           version=$(npx -c 'echo $npm_package_version')
-          docker tag partsshop:latest:$version ${{ secrets.ECR_REPOSITORY_URI }}/partsshop:$version-${{ env.BUILD_NUMBER }}
-          docker push ${{ secrets.ECR_REPOSITORY_URI }}/partsshop:$version-${{ env.BUILD_NUMBER }}
-          
+          docker tag partsshop:$version ${{ env.ecr_repository_uri }}:$version-${{ env.BUILD_NUMBER }}
+          docker push ${{ env.ecr_repository_uri }}:$version-${{ env.BUILD_NUMBER }}
