@@ -14,5 +14,6 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/config/orm.config.ts ./config/orm.config.ts
 COPY --from=builder /app/config/email.config.ts ./config/email.config.ts
 COPY --from=builder /app/tsconfig.json ./tsconfig.json
+EXPOSE 3000
 
 CMD [ "sh", "-c", "node /app/dist/src/main.js"]

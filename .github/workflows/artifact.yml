@@ -31,7 +31,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Cache node modules
-        uses: actions/cache@preview
+        uses: actions/cache@v4
         with:
           path: node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
@@ -68,4 +68,6 @@ jobs:
         run: |
           version=$(npx -c 'echo $npm_package_version')
           docker tag partsshop:$version ${{ env.ecr_repository_uri }}:$version-${{ env.BUILD_NUMBER }}
+          docker tag partsshop:$version ${{ env.ecr_repository_uri }}:latest
           docker push ${{ env.ecr_repository_uri }}:$version-${{ env.BUILD_NUMBER }}
+          docker push ${{ env.ecr_repository_uri }}:latest

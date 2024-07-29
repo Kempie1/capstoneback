@@ -14,7 +14,7 @@ const ormConfig:TypeOrmModuleOptions = {
     entities: ["dist/**/*.entity{.ts,.js}"],
     migrations: ["dist/migrations/*{.ts,.js}"],
     autoLoadEntities: true,
-    synchronize: true, // TODO turn off for prod
+    synchronize: process.env.NODE_ENV === 'development' ? true : false,
 }
 
 export default ormConfig
