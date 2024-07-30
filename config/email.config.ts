@@ -18,7 +18,7 @@ const mailerConfig:MailerOptions = {
       from: '"Artemsoft" <'+ process.env.HOME_EMAIL+">",
     },
     template: {
-      dir: 'src/templates',
+      dir: 'dist/src/templates',
       adapter: new PugAdapter(),
       options: {
         strict: true,

@@ -22,7 +22,12 @@ async function bootstrap() {
     SwaggerModule.setup('api', app, document);
   }
   app.enableCors({
-    origin: ['artemsoft.com', 'www.artemsoft.com'],
+    origin: [
+      'http://artemsoft.com', 
+      'http://www.artemsoft.com',
+      'https://artemsoft.com', 
+      'https://www.artemsoft.com'
+    ],
   });
   app.use(helmet());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
