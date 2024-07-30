@@ -140,9 +140,10 @@ export class StripeService {
           order.orderItems,
           order.totalPrice,
         );
-        // TODO: Record/save fulfillment status for this
         // Checkout Session
         order.fulfilled = true;
+        // Clear the cart
+        await this.cartService.clearCart(order.user);
       }
       await this.orderRepository.save(order);
     }
