@@ -23,10 +23,10 @@ async function bootstrap() {
   }
   app.enableCors({
     origin: [
-      'http://artemsoft.com', 
+      'http://artemsoft.com',
       'http://www.artemsoft.com',
-      'https://artemsoft.com', 
-      'https://www.artemsoft.com'
+      'https://artemsoft.com',
+      'https://www.artemsoft.com',
     ],
   });
   app.use(helmet());
