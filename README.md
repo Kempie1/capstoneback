@@ -51,3 +51,8 @@ After that you can test endpoints as normal.
 
 ## Pushing to production
 When there is a push to the "prod" branch, an image will be sent to AWS ECR. After that ssh into server and run the update script.
+
+
+
+## Documentation
+Further documentation can be found in the documentation folder.
