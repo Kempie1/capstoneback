@@ -149,7 +149,6 @@ export class ProductsService {
     return result;
   }
 
-
   async getRelatedProduct(query: GetRelatedProductDTO) {
     return this.productsRepository.find({
       relations: ['productCharacteristics'],

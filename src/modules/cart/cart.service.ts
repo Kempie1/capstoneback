@@ -87,7 +87,7 @@ export class CartService {
         compatibilityIssues.push(
           'Motherboard form factor or case type is not widely used, please check compatibility manually.',
         );
-        compatability=false
+        compatability = false;
       }
       if (
         MotherboardFormFactorEnum[motherboard.form_factor] <=
@@ -96,7 +96,7 @@ export class CartService {
         compatibilityIssues.push(
           'Motherboard form factor and case type are not compatible.',
         );
-        compatability=false
+      compatability = false;
     }
 
     // Check if motherboard has wifi in the name
@@ -108,7 +108,7 @@ export class CartService {
         compatibilityIssues.push(
           "Motherboard doesn't have wifi, consider adding a wireless network card or a different motherboard",
         );
-        compatability=false
+        compatability = false;
       }
     }
 
@@ -122,7 +122,7 @@ export class CartService {
         compatibilityIssues.push(
           'Memory capacity or number of modules exceeds motherboard limits.',
         );
-        compatability=false
+        compatability = false;
       }
     }
 
@@ -134,7 +134,7 @@ export class CartService {
         compatibilityIssues.push(
           'Motherboard socket type is not recognized. Please check manually',
         );
-        compatability=false
+        compatability = false;
       } else if (
         socketMemorySupport == 'DDR5 || DDR4' &&
         (memoryType == 'DDR5' || memoryType == 'DDR4')
@@ -142,12 +142,12 @@ export class CartService {
         compatibilityIssues.push(
           'Memory type could be supported by your motherboard, but please check manually.',
         );
-        compatability=false
+        compatability = false;
       } else if (memoryType !== socketMemorySupport) {
         compatibilityIssues.push(
           'Memory type is not supported by motherboard.',
         );
-        compatability=false
+        compatability = false;
       }
     }
 
@@ -160,16 +160,15 @@ export class CartService {
         compatibilityIssues.push(
           'GPU chipset is not recognized. Please check manually.',
         );
-        compatability=false
+        compatability = false;
         totalWattage += gpu.powerConsumption;
         if (cpu) totalWattage += cpu.tdp;
         if (totalWattage > psu.wattage) {
           compatibilityIssues.push(
             'Power Supply wattage is not enough for the components in your cart.',
           );
-          compatability=false
-        }
-        else{
+          compatability = false;
+        } else {
           compatibilityIssues.push(
             'Power Supply wattage is probably enough for the components in your cart.',
           );
@@ -184,7 +183,7 @@ export class CartService {
       cart: cart,
       compatibilityIssues: compatibilityIssues,
       compatibilityStatus: compatability,
-    }
+    };
     return result;
   }
 
