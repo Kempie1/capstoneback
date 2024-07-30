@@ -74,8 +74,6 @@ export class CartService {
     const compatibilityIssues = [];
 
     // Step 2: Check CPU and Motherboard Socket Compatibility
-    console.log(cpu);
-    console.log(motherboard);
     if (cpu && motherboard && cpu.socket !== motherboard.socket) {
       compatibilityIssues.push('CPU and Motherboard sockets do not match.');
     }
