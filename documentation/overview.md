@@ -47,6 +47,7 @@ To interact with the database we use Typeorm as our ORM, which means all our que
 Each module handles its own domain, ex. products are stored and accessed in the products module.
 
 Please refer to swagger for up-to date API documentation.
+Either from /api route, or by going to https://editor-next.swagger.io/ and pasting the api-json.json file.
 
 ## Database
 
