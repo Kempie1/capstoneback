@@ -6,15 +6,13 @@ import { parse } from 'fast-csv';
 import { Characteristic } from "../src/modules/products/entities/Characteristic.entity";
 import { ProductCharacteristic } from "../src/modules/products/entities/ProductCharacteristic.entity";
 import { Category } from "../src/modules/products/entities/Category.entity";
-import motherboardsJson from '../sourceData/json/motherboard.json'
-import { query } from "express";
 
 export class InitialData1715005511809 implements MigrationInterface {
 
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         // await queryRunner.startTransaction();
-        const tempURL = "https://picsum.photos/1000"
+        const tempURL = "https://partsshop-bucket.s3.eu-central-1.amazonaws.com/computerpart.jpg"
         
         // Function to check if a file is a CSV file
         const isCSVFile = (fileName: string): boolean => {
@@ -51,7 +49,6 @@ export class InitialData1715005511809 implements MigrationInterface {
             const files = await fs.promises.readdir(folderPath);
             const csvFiles = files.filter(isCSVFile);
             return csvFiles
-                // queryRunner.commitTransaction()
             } catch (error) {
             console.error(`Error reading directory ${folderPath}:`, error);
             }
@@ -65,11 +62,12 @@ export class InitialData1715005511809 implements MigrationInterface {
             const filePath = path.join(csvFolderPath, fileName);
             const csvData = await readCSVFile(filePath);
             console.log(`--- File: ${fileName} ---`); //Category name
-           
+                   console.log("🌯")
             //Create Category of products
             let categoryEntity = await queryRunner.manager.create(Category, {
                 name:  path.parse(fileName).name,
             })
+                    console.log("🌯")
             let savedCategory = await queryRunner.manager.save(categoryEntity)
             console.log(savedCategory)
             let keys=[]
@@ -77,6 +75,7 @@ export class InitialData1715005511809 implements MigrationInterface {
             // let characteristicsEntities=[]
             //Create Characteristic rows
             for ( let key in csvData[0]){
+                        console.log("🌯")
                 if (key === "price" || key === "name") {
                     continue;
                 }
@@ -100,7 +99,7 @@ export class InitialData1715005511809 implements MigrationInterface {
             }
             //Create Product rows
             for ( let product of csvData){
-                console.log("🦊",savedCategory)
+                console.log("🅱",savedCategory)
                 let insertedProductResult= await queryRunner.manager.create(Product, {
                     name: (product as any).name,
                     imgUrl: tempURL,
@@ -116,6 +115,7 @@ export class InitialData1715005511809 implements MigrationInterface {
                 }}); 
                 // console.log(productId) 
                 //Create ProductCharacterstic rows
+                        // console.log("🌯")
                 for (let i = 0; i < keys.length; i++) {
                     //Check if simmilar already exists
                     let foundProductCharacteristic = await queryRunner.manager.findOne<ProductCharacteristic>(ProductCharacteristic,{ 

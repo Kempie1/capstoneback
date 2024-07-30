@@ -3,7 +3,6 @@ import { DataSource, DataSourceOptions } from "typeorm";
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 
 dotenvConfig({ path: '.env' });
-
 const ormConfig:TypeOrmModuleOptions = {
     type: 'postgres',
     host: process.env.DB_HOST || 'localhost',

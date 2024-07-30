@@ -3,19 +3,19 @@ import { MailerOptions } from '@nestjs-modules/mailer';
 import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 
 dotenvConfig({ path: '.env' });
-
 const mailerConfig:MailerOptions = {
     // Ethereal email service captures outbound emails for testing
     transport: {
-      host: 'smtp.ethereal.email',
-      port: 587,
+      service: "smtp2go",
+      host: 'mail.smtp2go.com',
+      port: 2525,
       auth: {
-        user: 'guy31@ethereal.email',
-        pass: 'khMa8JjSnsMEXRgBTQ'
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       }
     },
     defaults: {
-      from: '"nest-modules" <modules@nestjs.com>',
+      from: '"Artemsoft" <'+ process.env.HOME_EMAIL+">",
     },
     template: {
       dir: 'src/templates',
