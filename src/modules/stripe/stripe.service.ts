@@ -100,8 +100,6 @@ export class StripeService {
     let order = new Order();
     let orderItems: OrderItem[] = [];
     if (!existingOrder) {
-      // console.log("CheckoutSes", checkoutSession)
-      // console.log('Checkout Session:', checkoutSession.line_items.data[0].price);
       order.stripeSessionId = sessionId;
       order.totalPrice = (checkoutSession.amount_total / 100).toFixed(2);
       order.user = await this.userRepository.findOne({
@@ -127,7 +125,6 @@ export class StripeService {
         },
       );
       order.orderItems = await Promise.all(itemPromises);
-      console.log('🍕', order.orderItems);
       order.fulfilled = false;
     } else {
       order = existingOrder;
@@ -160,13 +157,10 @@ export class StripeService {
         sig,
         this.configService.get<string>('STRIPE_WEBHOOK_SECRET'),
       );
-      // console.log('Webhook event:', event);
       switch (event.type) {
         case 'checkout.session.completed':
         case 'checkout.session.async_payment_succeeded':
-          // const session = event.data.object;
           // Fulfill the purchase...
-          // console.log('Fulfilling purchase', session);
           this.fulfillCheckout(event.data.object.id);
           break;
         default:

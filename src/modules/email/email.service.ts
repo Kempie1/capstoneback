@@ -52,7 +52,6 @@ export class EmailService {
   }
 
   async sendOrder(email: string, orderItems: OrderItem[], orderTotal: string) {
-    console.log(orderItems);
     await this.mailerService.sendMail({
       to: email, // List of receivers
       from: this.configService.get<string>('HOME_EMAIL'), // Sender address
