@@ -3,6 +3,14 @@
 
 This is a nextJs backend for the PartsShop Capstone project
 
+
+## Important! 
+When testing stripe checkout use a fake visa card number: 
+4242 4242 4242 4242
+and a valid exparation date, everything else can be anything
+like so:
+![Sample Payment](./documentation/images/SamplePayment.png)
+
 ## Pre-requisits
 - Node.js v21.6.2
 - Git

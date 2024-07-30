@@ -29,8 +29,10 @@ PartsShop consists of four main components hosted on the AWS cloud:
 2. The Backend is written using NestJS and has access to our database. It is hosted using AWS ec2;
 3. Database is hosted using AWS RDS and is running as PostgreSQL;
 
+
 ![Application Overview](./images/ArchitectureOverview.png)
 
+Full architecture can be seen in the file CloudArchitecture.png
 ## Frontend
 
 PartsShop frontend lets users create an account, browse and add to cart different computer parts, and then go thorough a mock checkout.
@@ -43,6 +45,8 @@ The NestJS backend accepts the incoming API calls, queries the database for the 
 To interact with the database we use Typeorm as our ORM, which means all our queries are protected from SQL injections.
 
 Each module handles its own domain, ex. products are stored and accessed in the products module.
+
+Please refer to swagger for up-to date API documentation.
 
 ## Database
 

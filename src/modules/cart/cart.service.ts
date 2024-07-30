@@ -42,18 +42,6 @@ export class CartService {
     });
   }
 
-  async clearCart(user) {
-    const cart = await this.shoppingCartRepository.findOne({
-      where: { user: user },
-      relations: ['cartItems'],
-    });
-    if (cart.cartItems) {
-      cart.cartItems = [];
-    }
-    await this.shoppingCartRepository.save(cart);
-    return 'cart cleared';
-  }
-
   async compatibilityCheck(req) {
     const cart = await this.getCart(req, false, true);
     const cartItems = cart.cartItems;

@@ -142,8 +142,7 @@ export class StripeService {
         );
         // Checkout Session
         order.fulfilled = true;
-        // Clear the cart
-        await this.cartService.clearCart(order.user);
+        // TODO Clear the cart
       }
       await this.orderRepository.save(order);
     }
