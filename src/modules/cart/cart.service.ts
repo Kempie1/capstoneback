@@ -47,7 +47,9 @@ export class CartService {
       where: { user: user },
       relations: ['cartItems'],
     });
-    cart.cartItems = [];
+    if (cart.cartItems) {
+      cart.cartItems = [];
+    }
     await this.shoppingCartRepository.save(cart);
     return 'cart cleared';
   }
