@@ -45,10 +45,10 @@ export class CartService {
   async compatibilityCheck(req) {
     const cart = await this.getCart(req, false, true);
     const cartItems = cart.cartItems;
+    let compatability = true;
 
     // Group items by category for easier processing
     const groupedItems = this.groupItemsByCategory(cartItems);
-    console.log(groupedItems);
 
     const relevantCategories = [
       'cpu',
@@ -71,14 +71,11 @@ export class CartService {
     const caseItem = groupedItems['case']?.[0];
     const psu = groupedItems['power-supply']?.[0];
     const gpu = groupedItems['video-card']?.[0];
-    console.log(cpu, motherboard, memory, caseItem, psu, gpu);
     const compatibilityIssues = [];
 
     // Step 2: Check CPU and Motherboard Socket Compatibility
     if (cpu && motherboard && cpu.socket !== motherboard.socket) {
       compatibilityIssues.push('CPU and Motherboard sockets do not match.');
-    } else {
-      console.log('CPU and Motherboard sockets match.');
     }
 
     // Assuming we have a function `isFormFactorCompatible` to check compatibility
@@ -90,6 +87,7 @@ export class CartService {
         compatibilityIssues.push(
           'Motherboard form factor or case type is not widely used, please check compatibility manually.',
         );
+        compatability=false
       }
       if (
         MotherboardFormFactorEnum[motherboard.form_factor] <=
@@ -98,6 +96,7 @@ export class CartService {
         compatibilityIssues.push(
           'Motherboard form factor and case type are not compatible.',
         );
+        compatability=false
     }
 
     // Check if motherboard has wifi in the name
@@ -109,6 +108,7 @@ export class CartService {
         compatibilityIssues.push(
           "Motherboard doesn't have wifi, consider adding a wireless network card or a different motherboard",
         );
+        compatability=false
       }
     }
 
@@ -122,6 +122,7 @@ export class CartService {
         compatibilityIssues.push(
           'Memory capacity or number of modules exceeds motherboard limits.',
         );
+        compatability=false
       }
     }
 
@@ -133,6 +134,7 @@ export class CartService {
         compatibilityIssues.push(
           'Motherboard socket type is not recognized. Please check manually',
         );
+        compatability=false
       } else if (
         socketMemorySupport == 'DDR5 || DDR4' &&
         (memoryType == 'DDR5' || memoryType == 'DDR4')
@@ -140,10 +142,12 @@ export class CartService {
         compatibilityIssues.push(
           'Memory type could be supported by your motherboard, but please check manually.',
         );
+        compatability=false
       } else if (memoryType !== socketMemorySupport) {
         compatibilityIssues.push(
           'Memory type is not supported by motherboard.',
         );
+        compatability=false
       }
     }
 
@@ -156,11 +160,18 @@ export class CartService {
         compatibilityIssues.push(
           'GPU chipset is not recognized. Please check manually.',
         );
+        compatability=false
         totalWattage += gpu.powerConsumption;
         if (cpu) totalWattage += cpu.tdp;
         if (totalWattage > psu.wattage) {
           compatibilityIssues.push(
             'Power Supply wattage is not enough for the components in your cart.',
+          );
+          compatability=false
+        }
+        else{
+          compatibilityIssues.push(
+            'Power Supply wattage is probably enough for the components in your cart.',
           );
         }
       }
@@ -169,7 +180,12 @@ export class CartService {
       );
     }
 
-    return compatibilityIssues;
+    const result = {
+      cart: cart,
+      compatibilityIssues: compatibilityIssues,
+      compatibilityStatus: compatability,
+    }
+    return result;
   }
 
   // Helper function to group items by category

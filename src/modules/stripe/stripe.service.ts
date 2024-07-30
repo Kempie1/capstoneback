@@ -63,6 +63,9 @@ export class StripeService {
         quantity: cartItem.quantity,
       });
     });
+    if (lineItems.length === 0) {
+      throw new Error('No items in cart');
+    }
     const baseUrl = this.configService.get<string>('FRONTEND_URL');
     const sessionURL = await this.stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -135,7 +138,6 @@ export class StripeService {
       // to determine if fulfillment should be peformed
       if (checkoutSession.payment_status !== 'unpaid') {
         // TODO: Perform fulfillment of the line items
-        console.log('🍔', order);
         this.emailService.sendOrder(
           order.user.email,
           order.orderItems,
