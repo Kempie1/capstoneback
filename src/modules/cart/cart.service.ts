@@ -75,17 +75,29 @@ export class CartService {
 
     // Step 2: Check CPU and Motherboard Socket Compatibility
     if (cpu && motherboard) {
-      const cpuSocket= this.getSpecificCharacteristic(cpu.characteristics, "socket")
-      const motherboardSocket= this.getSpecificCharacteristic(motherboard.characteristics, "socket")
-      if(cpuSocket !== motherboardSocket){
+      const cpuSocket = this.getSpecificCharacteristic(
+        cpu.characteristics,
+        'socket',
+      );
+      const motherboardSocket = this.getSpecificCharacteristic(
+        motherboard.characteristics,
+        'socket',
+      );
+      if (cpuSocket !== motherboardSocket) {
         compatibilityIssues.push('CPU and Motherboard sockets do not match.');
         compatability = false;
       }
     }
-    
+
     if (motherboard && caseItem) {
-      const caseType= this.getSpecificCharacteristic(caseItem.characteristics, "type")
-      const motherboardForm_factor= this.getSpecificCharacteristic(motherboard.characteristics, "form_factor")
+      const caseType = this.getSpecificCharacteristic(
+        caseItem.characteristics,
+        'type',
+      );
+      const motherboardForm_factor = this.getSpecificCharacteristic(
+        motherboard.characteristics,
+        'form_factor',
+      );
       if (
         !(motherboardForm_factor in MotherboardFormFactorEnum) ||
         !(caseType in CaseFormFactorEnum)
@@ -120,9 +132,18 @@ export class CartService {
 
     // Check if motherboard has enough ram slots
     if (motherboard && memory) {
-      const memoryModules= this.getSpecificCharacteristic(memory.characteristics, "modules")
-      const motherboardMaxMemory= this.getSpecificCharacteristic(motherboard.characteristics, "maxMemory")
-      const motherboardMemorySlots= this.getSpecificCharacteristic(motherboard.characteristics, "memorySlots")
+      const memoryModules = this.getSpecificCharacteristic(
+        memory.characteristics,
+        'modules',
+      );
+      const motherboardMaxMemory = this.getSpecificCharacteristic(
+        motherboard.characteristics,
+        'maxMemory',
+      );
+      const motherboardMemorySlots = this.getSpecificCharacteristic(
+        motherboard.characteristics,
+        'memorySlots',
+      );
       const memoryModulesSplit = memoryModules.split(','); // [0] is amount of modules, [1] is capacity per module
       if (
         memory.capacity > motherboardMaxMemory ||
@@ -137,8 +158,14 @@ export class CartService {
 
     // Check if DDR type is supported by motherboard
     if (memory && motherboard) {
-      const motherboardSocket= this.getSpecificCharacteristic(motherboard.characteristics, "socket")
-      const memorySpeed= this.getSpecificCharacteristic(memory.characteristics, "speed")
+      const motherboardSocket = this.getSpecificCharacteristic(
+        motherboard.characteristics,
+        'socket',
+      );
+      const memorySpeed = this.getSpecificCharacteristic(
+        memory.characteristics,
+        'speed',
+      );
       const socketMemorySupport = CPUSocketDDRSupportEnum[motherboardSocket];
       const memoryType = 'DDR' + memorySpeed.split(',')[0];
       if (socketMemorySupport === undefined) {
@@ -164,10 +191,19 @@ export class CartService {
 
     // Check if PSU wattage is enough
     if (psu && (gpu || cpu)) {
-      const gpuChipset= this.getSpecificCharacteristic(gpu.characteristics, "chipset")
-      const gpuPowerConsumption= this.getSpecificCharacteristic(gpu.characteristics, "powerConsumption")
-      const cpuTDP= this.getSpecificCharacteristic(cpu.characteristics, "tdp")
-      const psuWattage= this.getSpecificCharacteristic(psu.characteristics, "wattage")
+      const gpuChipset = this.getSpecificCharacteristic(
+        gpu.characteristics,
+        'chipset',
+      );
+      const gpuPowerConsumption = this.getSpecificCharacteristic(
+        gpu.characteristics,
+        'powerConsumption',
+      );
+      const cpuTDP = this.getSpecificCharacteristic(cpu.characteristics, 'tdp');
+      const psuWattage = this.getSpecificCharacteristic(
+        psu.characteristics,
+        'wattage',
+      );
       let totalWattage = 0;
       let gpuTDP = 0;
       if (gpu) gpuTDP = Number(GPUChipsetTDP[gpuChipset]);
@@ -215,9 +251,8 @@ export class CartService {
 
   // Helper function to group items by category
   getSpecificCharacteristic(characterstics, name) {
-    for (let char of characterstics){
-      if (char.characteristicName == name)
-        return char.value
+    for (const char of characterstics) {
+      if (char.characteristicName == name) return char.value;
     }
   }
 
