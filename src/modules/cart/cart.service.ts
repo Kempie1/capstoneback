@@ -74,15 +74,21 @@ export class CartService {
     const compatibilityIssues = [];
 
     // Step 2: Check CPU and Motherboard Socket Compatibility
-    if (cpu && motherboard && cpu.socket !== motherboard.socket) {
-      compatibilityIssues.push('CPU and Motherboard sockets do not match.');
+    if (cpu && motherboard) {
+      const cpuSocket= this.getSpecificCharacteristic(cpu.characteristics, "socket")
+      const motherboardSocket= this.getSpecificCharacteristic(motherboard.characteristics, "socket")
+      if(cpuSocket !== motherboardSocket){
+        compatibilityIssues.push('CPU and Motherboard sockets do not match.');
+        compatability = false;
+      }
     }
-
-    // Assuming we have a function `isFormFactorCompatible` to check compatibility
+    
     if (motherboard && caseItem) {
+      const caseType= this.getSpecificCharacteristic(caseItem.characteristics, "type")
+      const motherboardForm_factor= this.getSpecificCharacteristic(motherboard.characteristics, "form_factor")
       if (
-        !(motherboard.form_factor in MotherboardFormFactorEnum) ||
-        !(caseItem.type in CaseFormFactorEnum)
+        !(motherboardForm_factor in MotherboardFormFactorEnum) ||
+        !(caseType in CaseFormFactorEnum)
       ) {
         compatibilityIssues.push(
           'Motherboard form factor or case type is not widely used, please check compatibility manually.',
@@ -114,10 +120,13 @@ export class CartService {
 
     // Check if motherboard has enough ram slots
     if (motherboard && memory) {
-      const memoryModules = memory.modules.split(','); // [0] is amount of modules, [1] is capacity per module
+      const memoryModules= this.getSpecificCharacteristic(memory.characteristics, "modules")
+      const motherboardMaxMemory= this.getSpecificCharacteristic(motherboard.characteristics, "maxMemory")
+      const motherboardMemorySlots= this.getSpecificCharacteristic(motherboard.characteristics, "memorySlots")
+      const memoryModulesSplit = memoryModules.split(','); // [0] is amount of modules, [1] is capacity per module
       if (
-        memory.capacity > motherboard.maxMemory ||
-        memoryModules[0] > motherboard.memorySlots
+        memory.capacity > motherboardMaxMemory ||
+        memoryModulesSplit[0] > motherboardMemorySlots
       ) {
         compatibilityIssues.push(
           'Memory capacity or number of modules exceeds motherboard limits.',
@@ -128,8 +137,10 @@ export class CartService {
 
     // Check if DDR type is supported by motherboard
     if (memory && motherboard) {
-      const socketMemorySupport = CPUSocketDDRSupportEnum[motherboard.socket];
-      const memoryType = 'DDR' + memory.speed.split(',')[0];
+      const motherboardSocket= this.getSpecificCharacteristic(motherboard.characteristics, "socket")
+      const memorySpeed= this.getSpecificCharacteristic(memory.characteristics, "speed")
+      const socketMemorySupport = CPUSocketDDRSupportEnum[motherboardSocket];
+      const memoryType = 'DDR' + memorySpeed.split(',')[0];
       if (socketMemorySupport === undefined) {
         compatibilityIssues.push(
           'Motherboard socket type is not recognized. Please check manually',
@@ -153,17 +164,21 @@ export class CartService {
 
     // Check if PSU wattage is enough
     if (psu && (gpu || cpu)) {
+      const gpuChipset= this.getSpecificCharacteristic(gpu.characteristics, "chipset")
+      const gpuPowerConsumption= this.getSpecificCharacteristic(gpu.characteristics, "powerConsumption")
+      const cpuTDP= this.getSpecificCharacteristic(cpu.characteristics, "tdp")
+      const psuWattage= this.getSpecificCharacteristic(psu.characteristics, "wattage")
       let totalWattage = 0;
       let gpuTDP = 0;
-      if (gpu) gpuTDP = Number(GPUChipsetTDP[gpu.chipset]);
+      if (gpu) gpuTDP = Number(GPUChipsetTDP[gpuChipset]);
       if (gpuTDP === undefined) {
         compatibilityIssues.push(
           'GPU chipset is not recognized. Please check manually.',
         );
         compatability = false;
-        totalWattage += gpu.powerConsumption;
-        if (cpu) totalWattage += cpu.tdp;
-        if (totalWattage > psu.wattage) {
+        totalWattage += gpuPowerConsumption;
+        if (cpu) totalWattage += cpuTDP;
+        if (totalWattage > psuWattage) {
           compatibilityIssues.push(
             'Power Supply wattage is not enough for the components in your cart.',
           );
@@ -196,6 +211,14 @@ export class CartService {
       acc[category].push(this.productService.flattenProduct(item.product));
       return acc;
     }, {});
+  }
+
+  // Helper function to group items by category
+  getSpecificCharacteristic(characterstics, name) {
+    for (let char of characterstics){
+      if (char.characteristicName == name)
+        return char.value
+    }
   }
 
   async addProductToCart(req, body: AddToCartDto) {
